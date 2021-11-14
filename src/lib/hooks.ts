@@ -27,7 +27,7 @@ export function useWeb3Provider() {
     if (!provider) {
       task();
     }
-  }, []);
+  }, [provider]);
 
   const isError = useMemo(() => Boolean(error), [error]);
 
@@ -85,7 +85,7 @@ export function useWeb3Auth() {
     } catch (error) {
       console.log("failed to connect", error);
     }
-  }, [provider]);
+  }, [provider, resumeSession]);
 
   const { mutateAsync: signin, isLoading: isSigningIn } =
     useMutation(signinMutation);

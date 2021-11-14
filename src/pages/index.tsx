@@ -15,11 +15,11 @@ export default function Home() {
     } catch (error) {
       console.log("failed to connect", error);
     }
-  }, []);
+  }, [signin]);
 
   const handleGetStarted = useCallback(() => {
     router.push("/app");
-  }, []);
+  }, [router]);
 
   return (
     <MainLayout>

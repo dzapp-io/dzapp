@@ -1,9 +1,9 @@
 import { NextPage } from "next";
 import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
+import { zodResolver } from "@hookform/resolvers/zod/dist/zod";
 import { Contract } from "@ethersproject/contracts";
 import { getAddress } from "@ethersproject/address";
-import * as yup from "yup";
+import * as zod from "zod";
 
 import MainLayout from "layouts/MainLayout";
 import { useContractSourceQuery } from "lib/etherscan";
@@ -12,24 +12,21 @@ import TextInput from "components/TextInput";
 import Button from "components/Button";
 import TextArea from "components/TextArea";
 
-const addressSchema = yup
+const addressSchema = zod
   .string()
-  .required("Address is required.")
-  .test({
-    message: "Invalid address.",
-    test(value) {
-      try {
-        return Boolean(getAddress(value));
-      } catch (error) {
-        return false;
-      }
-    },
-  });
+  .nonempty("Address is required.")
+  .refine((value) => {
+    try {
+      return Boolean(getAddress(value));
+    } catch (error) {
+      return false;
+    }
+  }, "Invalid address.");
 
-const schema = yup
+const schema = zod
   .object({
     address: addressSchema,
-    abi: yup.string().required("Abi is required."),
+    abi: zod.string().nonempty("Abi is required."),
   })
   .required();
 
@@ -44,12 +41,12 @@ function useContract(address: string, abi: string) {
         contractRef.current = new Contract(address, abi);
       }
     }
-  }, [contractRef]);
+  }, [abi, address, contractRef]);
 
   return contractRef.current;
 }
 
-type FormValues = yup.InferType<typeof schema>;
+type FormValues = zod.infer<typeof schema>;
 
 const NewWorkflow: NextPage = () => {
   const {
@@ -60,7 +57,7 @@ const NewWorkflow: NextPage = () => {
     formState: { errors },
   } = useForm<FormValues>({
     mode: "all",
-    resolver: yupResolver(schema),
+    resolver: zodResolver(schema),
   });
 
   const submitHandler = handleSubmit(({ abi, address }) => {
@@ -77,7 +74,7 @@ const NewWorkflow: NextPage = () => {
     if (contractData?.ABI && !contractData.ABI.includes("verified")) {
       setValue("abi", contractData.ABI);
     }
-  }, [contractData]);
+  }, [contractData, setValue]);
 
   return (
     <MainLayout>
