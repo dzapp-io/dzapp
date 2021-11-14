@@ -55,7 +55,7 @@ const MainLayout: FC<Props> = ({ children, title, subTitle }) => {
           animate={"enter"}
           exit="exit"
           transition={{ type: "spring" }}
-          className="relative w-full mx-auto p-12 max-w-xl md:border md:shadow-xl bg-gray-900 text-purple-200 border-gray-600 rounded-2xl"
+          className="relative w-full mx-auto p-12 max-w-xl md:ring md:shadow-xl bg-gray-900 text-purple-200 ring-purple-700/80 rounded-2xl"
         >
           {(title || subTitle) && (
             <motion.div
