@@ -42,7 +42,8 @@ export const contract = {
         module: "contract",
         action: "getabi",
         address: contractAddress,
-        apikey: process.env.NEXT_PUBLIC_ETHERSCAN_API_KEY,
+        apikey:
+          process.env.NEXT_PUBLIC_ETHERSCAN_API_KEY ?? "[missing api key]",
       }).toString();
 
       const { result } = await client
@@ -58,7 +59,8 @@ export const contract = {
         module: "contract",
         action: "getsourcecode",
         address: contractAddress,
-        apikey: process.env.NEXT_PUBLIC_ETHERSCAN_API_KEY,
+        apikey:
+          process.env.NEXT_PUBLIC_ETHERSCAN_API_KEY ?? "[missing api key]",
       }).toString();
 
       const { result: results } = await client
@@ -80,6 +82,17 @@ export function useContractSourceQuery(contractAddress: string) {
   }
 
   return useQuery(["contract-source", { contractAddress }], query, {
+    enabled: Boolean(contractAddress),
+    staleTime: 60 * 60 * 1000,
+  });
+}
+
+export function useContractABIeQuery(contractAddress: string) {
+  async function query() {
+    return await contract.getContractABI(contractAddress);
+  }
+
+  return useQuery(["contract-abi", { contractAddress }], query, {
     enabled: Boolean(contractAddress),
     staleTime: 60 * 60 * 1000,
   });

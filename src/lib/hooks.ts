@@ -1,10 +1,11 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
-import detectEthereumProvider from "@metamask/detect-provider";
-import { Web3Provider } from "@ethersproject/providers";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useMutation } from "react-query";
+import detectEthereumProvider from "@metamask/detect-provider";
+import { Web3Provider, ExternalProvider } from "@ethersproject/providers";
+import { Contract } from "@ethersproject/contracts";
 
 export function useWeb3Provider() {
-  const [provider, setProvider] = useState<Web3Provider>(null);
+  const [provider, setProvider] = useState<Web3Provider | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<unknown>(null);
 
@@ -14,8 +15,7 @@ export function useWeb3Provider() {
         setIsLoading(true);
         const externalProvider = await detectEthereumProvider();
         if (externalProvider) {
-          console.log(externalProvider);
-          setProvider(new Web3Provider(externalProvider));
+          setProvider(new Web3Provider(externalProvider as ExternalProvider));
         }
       } catch (error) {
         setError(error);
@@ -50,7 +50,7 @@ export function useWeb3Auth() {
   const [user, setUser] = useState<Web3User>({ kind: "anonymous" });
   const { provider } = useWeb3Provider();
 
-  const resumeSession = useCallback(async (provider: Web3Provider) => {
+  const resumeSession = useCallback(async () => {
     try {
       if (!provider) {
         console.log("no provider");
@@ -68,12 +68,12 @@ export function useWeb3Auth() {
     } catch (error) {
       return false;
     }
-  }, []);
+  }, [provider]);
 
   const signinMutation = useCallback(async () => {
-    const resumed = await resumeSession(provider);
-    if (resumed) {
-      console.log("session resumed");
+    const resumed = await resumeSession();
+
+    if (resumed || !provider) {
       return;
     }
 
@@ -94,7 +94,7 @@ export function useWeb3Auth() {
     useMutation(signinMutation);
 
   useEffect(() => {
-    resumeSession(provider);
+    resumeSession();
   }, [provider, resumeSession]);
 
   const isConnected = useMemo(() => user.kind === "connected", [user]);
@@ -105,4 +105,19 @@ export function useWeb3Auth() {
     user,
     isConnected,
   };
+}
+
+export function useContract(address: string, abi: string) {
+  const contractRef = useRef<Contract | null>(null);
+
+  useEffect(() => {
+    if (!address || !abi) {
+      return;
+    }
+    if (!contractRef.current) {
+      contractRef.current = new Contract(address, abi);
+    }
+  }, [abi, address, contractRef]);
+
+  return contractRef.current;
 }

@@ -9,7 +9,9 @@ module.exports = {
     extend: {
       colors: {},
       fontFamily: {
-        sans: "Lato, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif",
+        sans: "'Rubik', sans-serif",
+        display: "'Righteous', cursive",
+        mono: "'Fira Code', monospace",
       },
       backgroundImage: (_theme) => ({
         twoTone1: "linear-gradient(110deg, #393947 60%, #EAEAF2 60%)",

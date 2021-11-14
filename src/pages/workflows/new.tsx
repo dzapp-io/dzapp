@@ -1,5 +1,6 @@
-import { NextPage } from "next";
+import { useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
+import { NextPage } from "next";
 import { zodResolver } from "@hookform/resolvers/zod/dist/zod";
 import { Contract } from "@ethersproject/contracts";
 import { getAddress } from "@ethersproject/address";
@@ -7,7 +8,7 @@ import * as zod from "zod";
 
 import MainLayout from "layouts/MainLayout";
 import { useContractSourceQuery } from "lib/etherscan";
-import { useEffect, useRef } from "react";
+import { useContract } from "lib/hooks";
 import TextInput from "components/TextInput";
 import Button from "components/Button";
 import TextArea from "components/TextArea";
@@ -29,22 +30,6 @@ const schema = zod
     abi: zod.string().nonempty("Abi is required."),
   })
   .required();
-
-function useContract(address: string, abi: string) {
-  const contractRef = useRef(null);
-
-  useEffect(() => {
-    if (!address || !abi) {
-      return null;
-    } else {
-      if (!contractRef.current) {
-        contractRef.current = new Contract(address, abi);
-      }
-    }
-  }, [abi, address, contractRef]);
-
-  return contractRef.current;
-}
 
 type FormValues = zod.infer<typeof schema>;
 
@@ -70,6 +55,8 @@ const NewWorkflow: NextPage = () => {
 
   const { data: contractData } = useContractSourceQuery(address);
 
+  const contract = useContract(address, contractData?.ABI ?? "");
+
   useEffect(() => {
     if (contractData?.ABI && !contractData.ABI.includes("verified")) {
       setValue("abi", contractData.ABI);
@@ -77,35 +64,35 @@ const NewWorkflow: NextPage = () => {
   }, [contractData, setValue]);
 
   return (
-    <MainLayout title="New Workflow" subTitle="Some description here">
+    <MainLayout title="New Workflow" subTitle="Start connecting dApps">
       <form
         method="post"
         onSubmit={submitHandler}
         className="grid gap-4 w-full"
       >
         <TextInput
+          type="search"
           label="Contract Address"
           placeholder="Contract Address"
+          errorMessage={errors.address?.message}
           {...register("address")}
         />
-        {errors.address && (
-          <div className="text-red-600">{errors.address.message}</div>
-        )}
         <TextArea
           label="Contract ABI"
           placeholder="Enter ABI"
+          errorMessage={errors.abi?.message}
           {...register("abi")}
         />
 
-        {errors.abi && <div className="text-red-600">{errors.abi.message}</div>}
-        <Button type="submit">Continue</Button>
         {contractData && (
-          <div>
+          <div className="bg-blue-100 p-4 rounded-xl">
             <ul>
               <li>Contract Name: {contractData.ContractName}</li>
             </ul>
           </div>
         )}
+
+        <Button type="submit">Continue</Button>
       </form>
     </MainLayout>
   );

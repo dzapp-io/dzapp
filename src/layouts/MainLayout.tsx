@@ -23,28 +23,32 @@ const MainLayout: FC<Props> = ({ children, title, subTitle }) => {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen">
       <Head>
-        <title>dApp Flow</title>
+        <title>dZApp</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <header className="p-4 bg-indigo-600 text-white w-full">
+      <header className="p-4 md:py-6 bg-blue-900 text-gray-300 w-full">
         <div className="w-full max-w-2xl m-auto flex justify-between">
           <div>
-            <h1 className="font-semibold">dApp Flow</h1>
-            <sub>Low code /no code Web3 Automation</sub>
+            <h1 className="font-semibold text-3xl text-blue-100 font-display">
+              dZApp
+            </h1>
+            <sub className="text-sm text-blue-200">
+              Low code /no code Web3 Automation
+            </sub>
           </div>
           <div>
             <ConnectToWallet />
           </div>
         </div>
       </header>
-      <main className="flex flex-col items-center justify-center w-full flex-1 px-20 text-center bg-indigo-500">
+      <main className="flex flex-col items-center justify-center w-full flex-1 md:px-12 px-4 text-center bg-blue-700">
         <motion.div
           variants={MAIN_VARIANTS}
           initial="hidden"
           animate={"enter"}
           exit="exit"
           transition={{ type: "spring" }}
-          className="relative w-full mx-auto md:p-12 p-6 max-w-xl md:border md:shadow-xl bg-white border-gray-200 rounded-2xl"
+          className="relative w-full mx-auto p-12 max-w-xl md:border md:shadow-xl bg-white border-gray-200 rounded-2xl"
         >
           {(title || subTitle) && (
             <motion.div
@@ -70,7 +74,9 @@ const MainLayout: FC<Props> = ({ children, title, subTitle }) => {
           {children}
         </motion.div>
       </main>
-      <footer className="flex items-center justify-center w-full h-24 border-t border-indigo-600 bg-indigo-700"></footer>
+      <footer className="flex items-center justify-center w-full h-24 border-t-4 border-blue-700/75 bg-blue-900 text-blue-200">
+        Copyright @{new Date().getFullYear()}
+      </footer>
     </div>
   );
 };

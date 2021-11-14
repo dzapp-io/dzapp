@@ -5,10 +5,14 @@ type Props = JSX.IntrinsicElements["textarea"] & {
   rounded?: boolean;
   variant?: "primary" | "secondary" | "outline";
   label?: string;
+  errorMessage?: string;
 };
 
-const TextArea: FC<Props> = forwardRef(
-  ({ variant, rounded, children, label, className, ...props }, ref) => {
+const TextArea = forwardRef<HTMLTextAreaElement, Props>(
+  (
+    { variant, rounded, children, label, errorMessage, className, ...props },
+    ref
+  ) => {
     const field = (
       <textarea
         className={cn(
@@ -19,18 +23,23 @@ const TextArea: FC<Props> = forwardRef(
         ref={ref}
       />
     );
-    return label ? (
-      <div className="grid gap-2">
-        <label
-          htmlFor={props.name}
-          className="block text-sm font-medium text-gray-700"
-        >
-          <span>{label}</span>
-        </label>
-        {field}
-      </div>
-    ) : (
-      field
+    return (
+      <>
+        {label ? (
+          <div className="grid gap-2">
+            <label
+              htmlFor={props.name}
+              className="block text-sm font-medium text-gray-700 text-left"
+            >
+              <span>{label}</span>
+            </label>
+            {field}
+          </div>
+        ) : (
+          field
+        )}
+        {errorMessage && <div className="text-red-600">{errorMessage}</div>}
+      </>
     );
   }
 );

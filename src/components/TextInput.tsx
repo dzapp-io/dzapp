@@ -8,11 +8,14 @@ type Props = JSX.IntrinsicElements["input"] & {
   errorMessage?: string;
 };
 
-const TextInput: FC<Props> = forwardRef(
-  ({ variant, rounded, children, label, className, ...props }, ref) => {
+const TextInput = forwardRef<HTMLInputElement, Props>(
+  (
+    { variant, rounded, children, label, errorMessage, className, ...props },
+    ref
+  ) => {
     const field = (
       <input
-        type="text"
+        type={props.type}
         className={cn(
           "shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md",
           className
@@ -21,13 +24,14 @@ const TextInput: FC<Props> = forwardRef(
         ref={ref}
       />
     );
+
     return (
       <>
         {label ? (
           <div className="grid gap-2">
             <label
               htmlFor={props.name}
-              className="block text-sm font-medium text-gray-700"
+              className="block text-sm font-medium text-gray-700 text-left"
             >
               <span>{label}</span>
             </label>
@@ -36,6 +40,7 @@ const TextInput: FC<Props> = forwardRef(
         ) : (
           field
         )}
+        {errorMessage && <div className="text-red-600">{errorMessage}</div>}
       </>
     );
   }

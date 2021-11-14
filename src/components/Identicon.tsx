@@ -1,9 +1,11 @@
 import { FC, useEffect, useRef } from "react";
 import jazzIcon from "@metamask/jazzicon";
+import classNames from "classnames";
 
-const Identicon: FC<{ account: string; size?: number }> = ({
+const Identicon: FC<{ account: string; size?: number; className?: string }> = ({
   account,
-  size,
+  className,
+  size = 32,
 }) => {
   const targetRef = useRef<HTMLDivElement>(null);
 
@@ -18,13 +20,14 @@ const Identicon: FC<{ account: string; size?: number }> = ({
 
   return (
     <div
-      className="rounded-full bg-black m-auto grid place-items-center"
+      className={classNames(
+        "rounded-full m-auto grid place-items-center",
+        className
+      )}
       style={{ width: size * 1.125, height: size * 1.125 }}
       ref={targetRef}
     />
   );
 };
-
-Identicon.defaultProps = { size: 32 };
 
 export default Identicon;
