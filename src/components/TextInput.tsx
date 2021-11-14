@@ -1,5 +1,6 @@
-import { FC, forwardRef } from "react";
+import { forwardRef } from "react";
 import cn from "classnames";
+import Label from "components/Label";
 
 type Props = JSX.IntrinsicElements["input"] & {
   rounded?: boolean;
@@ -29,12 +30,12 @@ const TextInput = forwardRef<HTMLInputElement, Props>(
       <>
         {label ? (
           <div className="grid gap-2">
-            <label
+            <Label
               htmlFor={props.name}
               className="block text-sm font-medium text-gray-700 text-left"
             >
               <span>{label}</span>
-            </label>
+            </Label>
             {field}
           </div>
         ) : (

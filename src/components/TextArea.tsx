@@ -1,5 +1,7 @@
-import { FC, forwardRef } from "react";
+import { forwardRef } from "react";
 import cn from "classnames";
+
+import Label from "components/Label";
 
 type Props = JSX.IntrinsicElements["textarea"] & {
   rounded?: boolean;
@@ -27,12 +29,7 @@ const TextArea = forwardRef<HTMLTextAreaElement, Props>(
       <>
         {label ? (
           <div className="grid gap-2">
-            <label
-              htmlFor={props.name}
-              className="block text-sm font-medium text-gray-700 text-left"
-            >
-              <span>{label}</span>
-            </label>
+            <Label htmlFor={props.name}>{label}</Label>
             {field}
           </div>
         ) : (

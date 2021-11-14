@@ -32,7 +32,7 @@ export default function Home() {
           <Identicon
             size={64}
             account={user.address}
-            className="bg-purple-500"
+            className="bg-gradient-to-br from-pink-400 to-purple-800"
           />
           <Button onClick={handleGetStarted}>Lets go!</Button>
         </div>

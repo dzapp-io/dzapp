@@ -8,6 +8,7 @@ const MAIN_VARIANTS: Variants = {
   enter: { opacity: 1, x: 0, y: 0 },
   exit: { opacity: 0, x: 0, y: -100 },
 };
+
 const APPEAR_VARIANTS: Variants = {
   hidden: { opacity: 0 },
   enter: { opacity: 1 },
@@ -19,28 +20,34 @@ type Props = {
   subTitle?: string;
 };
 
+export const Header = () => {
+  return (
+    <header className="p-4 md:py-6 bg-gray-900 text-gray-300 w-full border-b-2 border-purple-500">
+      <div className="w-full max-w-2xl m-auto flex justify-between">
+        <div>
+          <h1 className="font-semibold text-3xl text-transparent bg-clip-text bg-gradient-to-br from-pink-400 to-purple-800 font-display">
+            dZApp
+          </h1>
+          <sub className="text-sm text-purple-200">
+            Web3 automation made simple
+          </sub>
+        </div>
+        <div>
+          <ConnectToWallet />
+        </div>
+      </div>
+    </header>
+  );
+};
+
 const MainLayout: FC<Props> = ({ children, title, subTitle }) => {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen">
       <Head>
-        <title>dZApp</title>
+        <title>dZApp - Web3 automation made simple</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <header className="p-4 md:py-6 bg-gray-900 text-gray-300 w-full border-b-2 border-purple-500">
-        <div className="w-full max-w-2xl m-auto flex justify-between">
-          <div>
-            <h1 className="font-semibold text-3xl text-transparent bg-clip-text bg-gradient-to-br from-pink-400 to-purple-800 font-display">
-              dZApp
-            </h1>
-            <sub className="text-sm text-purple-200">
-              Low code /no code Web3 Automation
-            </sub>
-          </div>
-          <div>
-            <ConnectToWallet />
-          </div>
-        </div>
-      </header>
+      <Header />
       <main className="flex flex-col items-center justify-center w-full flex-1 md:px-12 px-4 text-center bg-gray-800">
         <motion.div
           variants={MAIN_VARIANTS}
@@ -48,7 +55,7 @@ const MainLayout: FC<Props> = ({ children, title, subTitle }) => {
           animate={"enter"}
           exit="exit"
           transition={{ type: "spring" }}
-          className="relative w-full mx-auto p-12 max-w-xl md:border md:shadow-xl bg-white border-gray-200 rounded-2xl"
+          className="relative w-full mx-auto p-12 max-w-xl md:border md:shadow-xl bg-gray-900 text-purple-200 border-gray-600 rounded-2xl"
         >
           {(title || subTitle) && (
             <motion.div
