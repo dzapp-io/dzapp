@@ -8,6 +8,9 @@ module.exports = {
   theme: {
     extend: {
       colors: {},
+      fontFamily: {
+        sans: "Lato, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif",
+      },
       backgroundImage: (_theme) => ({
         twoTone1: "linear-gradient(110deg, #393947 60%, #EAEAF2 60%)",
       }),

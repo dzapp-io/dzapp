@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Hydrate, QueryClient, QueryClientProvider } from "react-query";
 
 import "tailwindcss/tailwind.css";
+import "../styles/global.css";
 
 const MyApp: AppType = ({ Component, pageProps }) => {
   const [queryClient] = useState(() => new QueryClient());

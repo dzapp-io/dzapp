@@ -23,18 +23,14 @@ export default function Home() {
   }, [router]);
 
   return (
-    <MainLayout>
-      {isSigningIn && <div>Loading...</div>}
-
+    <MainLayout title="Hello">
       {user.kind === "anonymous" && (
         <Button onClick={handleConnectWallet}>Connect Wallet</Button>
       )}
       {user.kind === "connected" && (
-        <div className="grid gap-2">
-          <div>
-            <Identicon account={user.address} />
-          </div>
-          <Button onClick={handleGetStarted}>Get Started</Button>
+        <div className="grid gap-4">
+          <Identicon size={64} account={user.address} />
+          <Button onClick={handleGetStarted}>Lets go!</Button>
         </div>
       )}
     </MainLayout>
