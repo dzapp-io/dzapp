@@ -27,7 +27,7 @@ const addressSchema = zod
 const schema = zod
   .object({
     address: addressSchema,
-    abi: zod.string().nonempty("Abi is required."),
+    abi: zod.string().nonempty("ABI is required."),
   })
   .required();
 
