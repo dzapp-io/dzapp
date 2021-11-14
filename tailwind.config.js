@@ -6,7 +6,12 @@ module.exports = {
   ],
   darkMode: false, // or 'media' or 'class'
   theme: {
-    extend: {},
+    extend: {
+      colors: {},
+      backgroundImage: (_theme) => ({
+        twoTone1: "linear-gradient(110deg, #393947 60%, #EAEAF2 60%)",
+      }),
+    },
   },
   variants: {
     extend: {},
