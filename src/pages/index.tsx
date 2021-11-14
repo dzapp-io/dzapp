@@ -29,7 +29,7 @@ export default function Home() {
       )}
       {user.kind === "connected" && (
         <div className="grid gap-4">
-          <Identicon size={64} account={user.address} />
+          <Identicon size={64} account={user.address} className="bg-blue-500" />
           <Button onClick={handleGetStarted}>Lets go!</Button>
         </div>
       )}
