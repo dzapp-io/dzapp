@@ -19,7 +19,7 @@ export default function Home() {
   }, [signin]);
 
   const handleGetStarted = useCallback(() => {
-    router.push("/app");
+    router.push("/workflows");
   }, [router]);
 
   return (
