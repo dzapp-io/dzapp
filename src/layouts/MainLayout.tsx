@@ -37,7 +37,7 @@ const MainLayout: FC<Props> = ({ children, title, subTitle }) => {
           </div>
         </div>
       </header>
-      <main className="flex flex-col items-center justify-center w-full flex-1 px-20 text-center">
+      <main className="flex flex-col items-center justify-center w-full flex-1 px-20 text-center bg-indigo-500">
         <motion.div
           variants={MAIN_VARIANTS}
           initial="hidden"
@@ -70,7 +70,7 @@ const MainLayout: FC<Props> = ({ children, title, subTitle }) => {
           {children}
         </motion.div>
       </main>
-      <footer className="flex items-center justify-center w-full h-24 border-t"></footer>
+      <footer className="flex items-center justify-center w-full h-24 border-t border-indigo-600 bg-indigo-700"></footer>
     </div>
   );
 };

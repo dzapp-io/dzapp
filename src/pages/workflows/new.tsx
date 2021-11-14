@@ -77,11 +77,11 @@ const NewWorkflow: NextPage = () => {
   }, [contractData, setValue]);
 
   return (
-    <MainLayout>
+    <MainLayout title="New Workflow" subTitle="Some description here">
       <form
         method="post"
         onSubmit={submitHandler}
-        className="grid gap-4 max-w-md w-full"
+        className="grid gap-4 w-full"
       >
         <TextInput
           label="Contract Address"
