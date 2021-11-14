@@ -35,6 +35,8 @@ const TextArea: FC<Props> = forwardRef(
   }
 );
 
+TextArea.displayName = "TextArea";
+
 TextArea.defaultProps = {
   variant: "primary",
 };

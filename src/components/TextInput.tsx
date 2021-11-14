@@ -41,6 +41,8 @@ const TextInput: FC<Props> = forwardRef(
   }
 );
 
+TextInput.displayName = "TextInput";
+
 TextInput.defaultProps = {
   variant: "primary",
   type: "text",
