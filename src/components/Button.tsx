@@ -5,12 +5,14 @@ type Props = JSX.IntrinsicElements["button"] & {
   rounded?: boolean;
   variant?: "primary" | "secondary" | "outline";
   size?: "xs" | "sm" | "md" | "lg" | "xl";
+  isLoading?: boolean;
 };
 
 const Button: FC<Props> = ({
   size,
   variant,
   rounded,
+  isLoading,
   children,
   className,
   ...props

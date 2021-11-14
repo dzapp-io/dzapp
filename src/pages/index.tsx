@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import { useWeb3Auth } from "lib/hooks";
 import MainLayout from "layouts/MainLayout";
 import Button from "components/Button";
+import Identicon from "components/Identicon";
 
 export default function Home() {
   const { signin, user, isSigningIn } = useWeb3Auth();
@@ -29,10 +30,12 @@ export default function Home() {
         <Button onClick={handleConnectWallet}>Connect Wallet</Button>
       )}
       {user.kind === "connected" && (
-        <>
-          <div>Hello, {user.address}</div>
+        <div className="grid gap-2">
+          <div>
+            <Identicon account={user.address} />
+          </div>
           <Button onClick={handleGetStarted}>Get Started</Button>
-        </>
+        </div>
       )}
     </MainLayout>
   );
