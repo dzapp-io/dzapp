@@ -12,6 +12,7 @@ import { useContract } from "lib/hooks";
 import TextInput from "components/TextInput";
 import Button from "components/Button";
 import TextArea from "components/TextArea";
+import ContractCard from "compounds/ContractCard";
 
 const addressSchema = zod
   .string()
@@ -84,14 +85,7 @@ const NewWorkflow: NextPage = () => {
           {...register("abi")}
         />
 
-        {contractData && (
-          <div className="bg-blue-100 p-4 rounded-xl">
-            <ul>
-              <li>Contract Name: {contractData.ContractName}</li>
-            </ul>
-          </div>
-        )}
-
+        {contractData && <ContractCard address={address} />}
         <Button type="submit">Continue</Button>
       </form>
     </MainLayout>

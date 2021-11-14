@@ -26,13 +26,13 @@ const MainLayout: FC<Props> = ({ children, title, subTitle }) => {
         <title>dZApp</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <header className="p-4 md:py-6 bg-blue-900 text-gray-300 w-full">
+      <header className="p-4 md:py-6 bg-gray-900 text-gray-300 w-full border-b-2 border-purple-500">
         <div className="w-full max-w-2xl m-auto flex justify-between">
           <div>
-            <h1 className="font-semibold text-3xl text-blue-100 font-display">
+            <h1 className="font-semibold text-3xl text-transparent bg-clip-text bg-gradient-to-br from-pink-400 to-purple-800 font-display">
               dZApp
             </h1>
-            <sub className="text-sm text-blue-200">
+            <sub className="text-sm text-purple-200">
               Low code /no code Web3 Automation
             </sub>
           </div>
@@ -41,7 +41,7 @@ const MainLayout: FC<Props> = ({ children, title, subTitle }) => {
           </div>
         </div>
       </header>
-      <main className="flex flex-col items-center justify-center w-full flex-1 md:px-12 px-4 text-center bg-blue-700">
+      <main className="flex flex-col items-center justify-center w-full flex-1 md:px-12 px-4 text-center bg-gray-800">
         <motion.div
           variants={MAIN_VARIANTS}
           initial="hidden"
@@ -74,8 +74,13 @@ const MainLayout: FC<Props> = ({ children, title, subTitle }) => {
           {children}
         </motion.div>
       </main>
-      <footer className="flex items-center justify-center w-full h-24 border-t-4 border-blue-700/75 bg-blue-900 text-blue-200">
-        Copyright @{new Date().getFullYear()}
+      <footer className="flex items-center justify-center w-full h-24 border-t-2 border-purple-500 bg-gray-900 text-purple-200">
+        <span className="font-display">
+          &copy;{new Date().getFullYear()} /{" "}
+          <b className="text-transparent bg-clip-text bg-gradient-to-br from-pink-400 to-purple-700">
+            dZapp
+          </b>
+        </span>
       </footer>
     </div>
   );

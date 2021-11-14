@@ -24,11 +24,11 @@ const Button: FC<Props> = ({
       className={cn(
         "inline-flex items-center justify-center px-6 py-3 border border-transparent font-medium rounded-full shadow-sm  focus:outline-none focus:ring-2 focus:ring-offset-2",
         {
-          "text-white bg-blue-600 hover:bg-blue-700 focus:ring-blue-500":
+          "text-white bg-purple-600 hover:bg-purple-700 focus:ring-purple-500":
             variant === "primary",
-          "text-blue-700 bg-blue-100 hover:bg-blue-200 focus:ring-blue-500":
+          "text-purple-700 bg-purple-100 hover:bg-purple-200 focus:ring-purple-500":
             variant === "secondary",
-          "border-gray-300 text-gray-700 bg-white hover:bg-gray-50 focus:ring-blue-500":
+          "border-gray-300 text-gray-700 bg-white hover:bg-gray-50 focus:ring-purple-500":
             variant === "outline",
           "px-6 py-3.5 text-base": size === "xl",
           "px-5 py-2.5 text-base": size === "lg",

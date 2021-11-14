@@ -7,7 +7,7 @@ import Button from "components/Button";
 import Identicon from "components/Identicon";
 
 export default function Home() {
-  const { signin, user, isSigningIn } = useWeb3Auth();
+  const { signin, user } = useWeb3Auth();
   const router = useRouter();
 
   const handleConnectWallet = useCallback(async () => {
@@ -28,8 +28,12 @@ export default function Home() {
         <Button onClick={handleConnectWallet}>Connect Wallet</Button>
       )}
       {user.kind === "connected" && (
-        <div className="grid gap-4">
-          <Identicon size={64} account={user.address} className="bg-blue-500" />
+        <div className="grid gap-8">
+          <Identicon
+            size={64}
+            account={user.address}
+            className="bg-purple-500"
+          />
           <Button onClick={handleGetStarted}>Lets go!</Button>
         </div>
       )}

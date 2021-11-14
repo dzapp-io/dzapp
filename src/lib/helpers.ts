@@ -7,3 +7,6 @@ export const isAddress = (address: string) => {
     return false;
   }
 };
+
+export const truncateAddress = (address: string) =>
+  `${address.slice(0, 5)}...${address.slice(-5)}`;

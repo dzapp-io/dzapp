@@ -18,9 +18,9 @@ const ConnectToWallet: FC = () => {
   return (
     <div className="grid place-items-center h-full">
       {user.kind === "connected" && (
-        <div className="p-2 bg-blue-700 rounded-full flex items-center justify-center">
+        <div className="p-2 bg-purple-700 rounded-full flex items-center justify-center">
           <span className="px-2">0x...{user.address.slice(-5)}</span>
-          <Identicon className="bg-blue-200" account={user.address} />
+          <Identicon className="bg-purple-200" account={user.address} />
         </div>
       )}
       {user.kind === "anonymous" && (
