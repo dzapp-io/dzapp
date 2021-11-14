@@ -99,6 +99,7 @@ const NewWorkflow: NextPage = () => {
           placeholder="Enter ABI"
           {...register("abi")}
         />
+
         {errors.abi && <div className="text-red-600">{errors.abi.message}</div>}
         <Button type="submit">Continue</Button>
         {contractData && (

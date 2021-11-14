@@ -5,6 +5,7 @@ type Props = JSX.IntrinsicElements["input"] & {
   rounded?: boolean;
   variant?: "primary" | "secondary" | "outline";
   label?: string;
+  errorMessage?: string;
 };
 
 const TextInput: FC<Props> = forwardRef(
@@ -20,18 +21,22 @@ const TextInput: FC<Props> = forwardRef(
         ref={ref}
       />
     );
-    return label ? (
-      <div className="grid gap-2">
-        <label
-          htmlFor={props.name}
-          className="block text-sm font-medium text-gray-700"
-        >
-          <span>{label}</span>
-        </label>
-        {field}
-      </div>
-    ) : (
-      field
+    return (
+      <>
+        {label ? (
+          <div className="grid gap-2">
+            <label
+              htmlFor={props.name}
+              className="block text-sm font-medium text-gray-700"
+            >
+              <span>{label}</span>
+            </label>
+            {field}
+          </div>
+        ) : (
+          field
+        )}
+      </>
     );
   }
 );
