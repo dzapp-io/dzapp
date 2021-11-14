@@ -50,10 +50,11 @@ export function useWeb3Auth() {
   const [user, setUser] = useState<Web3User>({ kind: "anonymous" });
   const { provider } = useWeb3Provider();
 
-  const resumeSession = useCallback(async () => {
+  const resumeSession = useCallback(async (provider: Web3Provider) => {
     try {
       if (!provider) {
-        return;
+        console.log("no provider");
+        return false;
       }
 
       const signer = provider.getSigner();
@@ -67,10 +68,12 @@ export function useWeb3Auth() {
     } catch (error) {
       return false;
     }
-  }, [provider]);
+  }, []);
 
   const signinMutation = useCallback(async () => {
-    if (resumeSession()) {
+    const resumed = await resumeSession(provider);
+    if (resumed) {
+      console.log("session resumed");
       return;
     }
 
@@ -91,8 +94,8 @@ export function useWeb3Auth() {
     useMutation(signinMutation);
 
   useEffect(() => {
-    resumeSession();
-  }, [resumeSession]);
+    resumeSession(provider);
+  }, [provider, resumeSession]);
 
   const isConnected = useMemo(() => user.kind === "connected", [user]);
 

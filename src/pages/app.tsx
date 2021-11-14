@@ -7,13 +7,13 @@ import Button from "components/Button";
 
 const AppIndex: NextPage = () => {
   const router = useRouter();
-  const handleNewWorflow = useCallback(() => {
+  const handleNewWorkflow = useCallback(() => {
     router.push("/workflows/new");
   }, [router]);
 
   return (
     <MainLayout>
-      <Button onClick={handleNewWorflow}>New Workflow</Button>
+      <Button onClick={handleNewWorkflow}>New Workflow</Button>
     </MainLayout>
   );
 };

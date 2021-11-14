@@ -26,12 +26,7 @@ export default function Home() {
       {isSigningIn && <div>Loading...</div>}
 
       {user.kind === "anonymous" && (
-        <button
-          className="bg-indigo-600 text-white p-4 rounded-full font-semibold"
-          onClick={handleConnectWallet}
-        >
-          Connect Wallet
-        </button>
+        <Button onClick={handleConnectWallet}>Connect Wallet</Button>
       )}
       {user.kind === "connected" && (
         <>
