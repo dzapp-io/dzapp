@@ -1,8 +1,14 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useMutation } from "react-query";
-import detectEthereumProvider from "@metamask/detect-provider";
+
 import { Web3Provider, ExternalProvider } from "@ethersproject/providers";
 import { Contract } from "@ethersproject/contracts";
+
+import Web3Modal from "web3modal";
+
+const providerOptions = {
+  /* See Provider Options Section */
+};
 
 export function useWeb3Provider() {
   const [provider, setProvider] = useState<Web3Provider | null>(null);
@@ -12,8 +18,14 @@ export function useWeb3Provider() {
   useEffect(() => {
     async function task() {
       try {
+        const web3Modal = new Web3Modal({
+          network: "mainnet", // optional
+          cacheProvider: true, // optional
+          providerOptions, // required
+        });
+
         setIsLoading(true);
-        const externalProvider = await detectEthereumProvider();
+        const externalProvider = await web3Modal.connect();
         if (externalProvider) {
           setProvider(new Web3Provider(externalProvider as ExternalProvider));
         }
