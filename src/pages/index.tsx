@@ -2,6 +2,7 @@ import { useCallback } from "react";
 import { useRouter } from "next/router";
 
 import { useWeb3Auth } from "lib/hooks";
+
 import MainLayout from "layouts/MainLayout";
 import Button from "components/Button";
 import Identicon from "components/Identicon";
@@ -27,6 +28,7 @@ export default function Home() {
       {user.kind === "anonymous" && (
         <Button onClick={handleConnectWallet}>Connect Wallet</Button>
       )}
+
       {user.kind === "connected" && (
         <div className="grid gap-8">
           <Identicon

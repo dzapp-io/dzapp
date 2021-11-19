@@ -1,8 +1,8 @@
 module.exports = {
   mode: "jit",
   purge: [
-    "./src/pages/**/*.{js,ts,jsx,tsx}",
-    "./src/(components|compounds|layouts)/**/*.{js,ts,jsx,tsx}",
+    "./src/pages/**/*.{js,ts,jsx,tsx,css}",
+    "./src/(components|compounds|layouts)/**/*.{js,ts,jsx,tsx,css}",
   ],
   darkMode: false, // or 'media' or 'class'
   theme: {
@@ -16,6 +16,9 @@ module.exports = {
       backgroundImage: (_theme) => ({
         twoTone1: "linear-gradient(110deg, #393947 60%, #EAEAF2 60%)",
       }),
+      animation: {
+        "spin-slow": "spin 3s linear infinite",
+      },
     },
   },
   variants: {

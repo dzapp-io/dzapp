@@ -18,7 +18,7 @@ const TextInput = forwardRef<HTMLInputElement, Props>(
       <input
         type={props.type}
         className={cn(
-          "shadow-sm focus:ring-purple-500 focus:border-purple-500 block w-full sm:text-sm border-gray-300 rounded-md",
+          "shadow-sm focus:ring-purple-500 focus:border-purple-500 block w-full sm:text-sm border-gray-300 rounded-md text-gray-900",
           className
         )}
         {...props}
