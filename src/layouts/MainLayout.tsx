@@ -41,7 +41,7 @@ const MainLayout: FC<Props> = ({ children, title, subTitle }) => {
           transition={{ type: "spring" }}
           className="relative w-full mx-auto max-w-xl"
         >
-          <Box className="p-12 w-full md:ring md:shadow-xl bg-gray-900 text-purple-200 ring-purple-700/80 rounded-2xl">
+          <Box className="p-12 my-8 w-full md:ring md:shadow-xl bg-gray-900 text-purple-200 ring-purple-700/80 rounded-2xl">
             {(title || subTitle) && (
               <motion.div
                 initial="hidden"

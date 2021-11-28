@@ -1,15 +1,12 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useMutation } from "react-query";
-
 import { Web3Provider, ExternalProvider } from "@ethersproject/providers";
 import { Contract } from "@ethersproject/contracts";
-
 import WalletConnectProvider from "@walletconnect/web3-provider";
-
-import Web3Modal from "web3modal";
 import detectEthereumProvider from "@metamask/detect-provider";
+import Web3Modal from "web3modal";
 
-const INFURA_ID = "9568a787fc7f46739d810321a2e92955";
+import { CONTRACT_NOT_VERIFIED } from "./etherscan";
 
 const PROVIDER_OPTIONS = {
   injected: {
@@ -18,7 +15,7 @@ const PROVIDER_OPTIONS = {
   walletconnect: {
     package: WalletConnectProvider, // required
     options: {
-      infuraId: INFURA_ID, // required
+      infuraId: process.env.INFURA_ID, // required
     },
   },
 };
@@ -181,9 +178,10 @@ export function useContract(address: string, abi: string) {
   const contractRef = useRef<Contract | null>(null);
 
   useEffect(() => {
-    if (!address || !abi) {
+    if (!address || !abi || abi === CONTRACT_NOT_VERIFIED) {
       return;
     }
+
     if (!contractRef.current) {
       contractRef.current = new Contract(address, abi);
     }

@@ -3,8 +3,11 @@ import { Networkish } from "@ethersproject/networks";
 import ky from "ky";
 import { useQuery } from "react-query";
 
-export const getEtherscanProvider = (netowrk?: Networkish) =>
-  new EtherscanProvider(netowrk, process.env.ETHERSCAN_API_KEY);
+const ETHERSCAN_API_KEY =
+  process.env.NEXT_PUBLIC_ETHERSCAN_API_KEY ?? "[missing api key]";
+
+export const getEtherscanProvider = (network?: Networkish) =>
+  new EtherscanProvider(network, ETHERSCAN_API_KEY);
 
 const client = ky.extend({
   prefixUrl: "https://api.etherscan.io/api",
@@ -35,6 +38,8 @@ export type ContractSourceResponse = {
   }[];
 };
 
+export const CONTRACT_NOT_VERIFIED = "Contract source code not verified";
+
 export const contract = {
   async getContractABI(contractAddress: string) {
     try {
@@ -42,8 +47,7 @@ export const contract = {
         module: "contract",
         action: "getabi",
         address: contractAddress,
-        apikey:
-          process.env.NEXT_PUBLIC_ETHERSCAN_API_KEY ?? "[missing api key]",
+        apikey: ETHERSCAN_API_KEY,
       }).toString();
 
       const { result } = await client
@@ -59,8 +63,7 @@ export const contract = {
         module: "contract",
         action: "getsourcecode",
         address: contractAddress,
-        apikey:
-          process.env.NEXT_PUBLIC_ETHERSCAN_API_KEY ?? "[missing api key]",
+        apikey: ETHERSCAN_API_KEY,
       }).toString();
 
       const { result: results } = await client
@@ -89,7 +92,8 @@ export function useContractSourceQuery(contractAddress: string) {
 
 export function useContractABIeQuery(contractAddress: string) {
   async function query() {
-    return await contract.getContractABI(contractAddress);
+    const abi = await contract.getContractABI(contractAddress);
+    return abi;
   }
 
   return useQuery(["contract-abi", { contractAddress }], query, {

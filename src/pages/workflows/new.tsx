@@ -56,8 +56,6 @@ const NewWorkflow: NextPage = () => {
 
   const { data: contractData } = useContractSourceQuery(address);
 
-  const contract = useContract(address, contractData?.ABI ?? "");
-
   useEffect(() => {
     if (contractData?.ABI && !contractData.ABI.includes("verified")) {
       setValue("abi", contractData.ABI);
