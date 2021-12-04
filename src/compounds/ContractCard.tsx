@@ -2,7 +2,7 @@ import { FC } from "react";
 
 import { useContractSourceQuery } from "lib/etherscan";
 import { useContract } from "lib/hooks";
-import Link from "components/Link";
+
 import TextInput from "components/TextInput";
 
 type Props = {
