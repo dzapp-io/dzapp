@@ -1,11 +1,11 @@
-import { forwardRef } from "react";
+import { forwardRef, ReactNode } from "react";
 import cn from "classnames";
 import Label from "components/Label";
 
 type Props = JSX.IntrinsicElements["input"] & {
   rounded?: boolean;
   variant?: "primary" | "secondary" | "outline";
-  label?: string;
+  label?: ReactNode;
   errorMessage?: string;
 };
 

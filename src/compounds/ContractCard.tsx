@@ -1,12 +1,17 @@
-import { FC } from "react";
+import { FC, useCallback, useState } from "react";
+import { FunctionFragment } from "@ethersproject/abi";
+import { InfuraProvider } from "@ethersproject/providers";
+import { Networkish } from "@ethersproject/networks";
 
 import { useContractSourceQuery } from "lib/etherscan";
 import { useContract } from "lib/hooks";
 
 import TextInput from "components/TextInput";
-
+import Select from "components/Select";
+import Button from "components/Button";
 type Props = {
   address: string;
+  abi?: string;
 };
 
 function parseMethod(contractMethod: string, sourceCode?: string) {
@@ -60,47 +65,98 @@ function parseMethod(contractMethod: string, sourceCode?: string) {
   }
 }
 
+function useInfuraProvider(network?: Networkish) {
+  return new InfuraProvider(network, process.env.NEXT_PUBLIC_INFURA_ID);
+}
+
 const ContractCard: FC<Props> = (props) => {
   const { data: contractData } = useContractSourceQuery(props.address);
-  const contract = useContract(props.address, contractData?.ABI ?? "");
+  const infuraProvider = useInfuraProvider();
+  const contract = useContract(
+    props.address,
+    contractData?.ABI ?? "",
+    infuraProvider
+  );
+
+  const functionEntries = Object.values(contract?.interface?.functions ?? {});
+
+  const [selectedEntry, selectEntry] = useState<FunctionFragment>();
+
+  const [result, setResult] = useState<any[]>();
+
+  const handleRun = useCallback(async () => {
+    if (!contract) {
+      return;
+    }
+
+    if (selectedEntry) {
+      setResult(undefined);
+
+      const fn = contract.functions[selectedEntry.name];
+
+      if (fn) {
+        const result = await fn();
+        setResult(result);
+      }
+    }
+  }, [contract, selectedEntry]);
 
   return (
-    <section>
-      <div>Contract: {contractData?.ContractName}</div>
+    <section className="grid gap-8 rounded-2xl p-2">
+      <span className="text-xl">{contractData?.ContractName}</span>
       {contract && (
-        <div className="text-left">
-          Contract methods:
-          {Object.entries(contract.functions)
-            .filter(([k]) => k.includes("(") && k.endsWith(")"))
-            .map(([key, value], i) => {
-              const method = parseMethod(key, contractData?.SourceCode);
-
-              if (!method) {
-                return "";
-              }
-
-              return (
-                <div key={key} className="p-2 w-full">
-                  {method.name}:
-                  <div className="grid">
-                    arguments:
-                    <div>
-                      {method.args.map((x, i) => (
-                        <div key={`arg-${i}`}>
-                          <TextInput label={x.name} />
-                          name: {x.name ?? "unknown"}; type: {x.type};
-                        </div>
-                      ))}
-                    </div>
-                  </div>
+        <div className="grid gap-4">
+          <Select<FunctionFragment>
+            label="Functions"
+            labelExtractor={(x) => x.name}
+            value={selectedEntry}
+            onChange={selectEntry}
+            items={functionEntries.map((fragment) => ({
+              value: fragment,
+              label: fragment.name,
+            }))}
+          />
+          {selectedEntry && (
+            <div className="w-full bg-gray-800 text-white rounded-2xl overflow-hidden grid gap-4">
+              <div className="bottom-auto text-xl text-pink-400 pb-6 border-b-2 border-pink-400 grid gap-4 p-4">
+                {selectedEntry.name}
+                <div className="text-purple-400 text-base font-mono bg-gray-900 p-4 rounded-xl">
+                  {selectedEntry.format("full")}
                 </div>
-              );
-            })}
-          {Object.entries(contract.filters).map(([key, value], i) => (
-            <div key={key} className="flex gap-2 border p-2 w-full">
-              {key}: {String(value)}
+              </div>
+              <div className="grid gap-4 text-white text-left p-4">
+                {Boolean(selectedEntry.inputs?.length) && (
+                  <div className="font-bold">Inputs:</div>
+                )}
+                {selectedEntry.inputs?.map((x, i) => (
+                  <div key={`input-${i}`}>
+                    <TextInput
+                      label={
+                        <>
+                          {x.name} (
+                          <span className="text-pink-400">
+                            {x.type} / {x.baseType}
+                          </span>
+                          )
+                        </>
+                      }
+                    />
+                  </div>
+                ))}
+
+                {selectedEntry.payable ? (
+                  <Button>Connect</Button>
+                ) : (
+                  <Button onClick={handleRun}>Run</Button>
+                )}
+
+                {result && <div>Output:</div>}
+
+                {result &&
+                  result.map((x, i) => <div key={`output-${i}`}>{x}</div>)}
+              </div>
             </div>
-          ))}
+          )}
         </div>
       )}
     </section>

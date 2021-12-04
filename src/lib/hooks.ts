@@ -1,6 +1,10 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useMutation } from "react-query";
-import { Web3Provider, ExternalProvider } from "@ethersproject/providers";
+import {
+  Provider,
+  Web3Provider,
+  ExternalProvider,
+} from "@ethersproject/providers";
 import { Contract } from "@ethersproject/contracts";
 import WalletConnectProvider from "@walletconnect/web3-provider";
 import detectEthereumProvider from "@metamask/detect-provider";
@@ -174,7 +178,7 @@ export function useWeb3Auth() {
   };
 }
 
-export function useContract(address: string, abi: string) {
+export function useContract(address: string, abi: string, provider?: Provider) {
   const contractRef = useRef<Contract | null>(null);
 
   useEffect(() => {
@@ -183,9 +187,9 @@ export function useContract(address: string, abi: string) {
     }
 
     if (!contractRef.current) {
-      contractRef.current = new Contract(address, abi);
+      contractRef.current = new Contract(address, abi, provider);
     }
-  }, [abi, address, contractRef]);
+  }, [abi, address, contractRef, provider]);
 
   return contractRef.current;
 }
