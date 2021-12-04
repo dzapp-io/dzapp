@@ -9,8 +9,9 @@ type Props = {
   address: string;
 };
 
-const parseMethod = (contractMethod: string, sourceCode?: string) => {
-  const matches = contractMethod.match(/^(\w+)\((.+)\)$/);
+function parseMethod(contractMethod: string, sourceCode?: string) {
+  const matches = contractMethod.match(/^(\w+)\((.+)?\)$/);
+
   if (!matches) {
     throw new Error("Invalid argument: contractMethod");
   }
@@ -57,7 +58,7 @@ const parseMethod = (contractMethod: string, sourceCode?: string) => {
       args,
     };
   }
-};
+}
 
 const ContractCard: FC<Props> = (props) => {
   const { data: contractData } = useContractSourceQuery(props.address);
