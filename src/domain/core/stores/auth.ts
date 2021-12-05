@@ -1,11 +1,6 @@
 import { createStore } from "lib/zustand";
 
-export type Web3User =
-  | { kind: "anonymous" }
-  | {
-      kind: "connected";
-      address: string;
-    };
+import { Web3User } from "../types";
 
 export type AuthState = {
   user: Web3User;
