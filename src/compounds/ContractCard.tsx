@@ -13,61 +13,11 @@ import { useContract } from "lib/hooks";
 import TextInput from "components/TextInput";
 import Select from "components/Select";
 import Button from "components/Button";
+
 type Props = {
   address: string;
   abi?: string;
 };
-
-function parseMethod(contractMethod: string, sourceCode?: string) {
-  const matches = contractMethod.match(/^(\w+)\((.+)?\)$/);
-
-  if (!matches) {
-    throw new Error("Invalid argument: contractMethod");
-  }
-
-  const name = matches[1];
-
-  if (!sourceCode) {
-    const args = matches[2]
-      ?.split(",")
-      .map((x) => ({ name: "", type: x, isArray: x.endsWith("[]") }));
-
-    return {
-      name,
-      args,
-    };
-  }
-
-  const lines = sourceCode
-    ?.split("\r\n")
-    .map((x) => x.trim())
-    .filter(Boolean);
-
-  const methodLine = lines?.find(
-    (x) => x.startsWith("function") && x.includes(name)
-  );
-
-  const argsRaw = methodLine?.match(/\((.+)\)/);
-
-  console.log({ argsRaw });
-
-  if (argsRaw) {
-    const args = argsRaw[1]?.split(",").map((x) => {
-      const [type, name] = x.trim().split(" ");
-
-      return {
-        name,
-        type,
-        isArray: type.endsWith("[]"),
-      };
-    });
-
-    return {
-      name,
-      args,
-    };
-  }
-}
 
 function useInfuraProvider(network?: Networkish) {
   return new InfuraProvider(network, process.env.NEXT_PUBLIC_INFURA_ID);
