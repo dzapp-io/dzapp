@@ -35,11 +35,13 @@
     "ethers": "^5.5.2",
     "framer-motion": "^5.3.3",
     "got": "^11.8.3",
+    "immer": "^9.0.7",
     "ky": "^0.28.7",
-    "next": "^12.0.5",
+    "next": "^12.0.7",
     "next-auth": "^4.0.2",
     "next-connect": "^0.11.0",
     "next-iron-session": "^4.2.0",
+    "next-pwa": "^5.4.4",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-hook-form": "^7.20.5",
@@ -48,7 +50,8 @@
     "superjson": "^1.8.0",
     "web3-react": "^5.0.5",
     "web3modal": "^1.9.4",
-    "zod": "^3.11.6"
+    "zod": "^3.11.6",
+    "zustand": "^3.6.7"
   },
   "devDependencies": {
     "@tailwindcss/forms": "^0.3.4",
@@ -56,7 +59,7 @@
     "@types/react": "^17.0.37",
     "autoprefixer": "^10.4.0",
     "eslint": "^7.32.0",
-    "eslint-config-next": "12.0.3",
+    "eslint-config-next": "12.0.7",
     "postcss": "^8.4.4",
     "prisma": "^3.6.0",
     "tailwindcss": "^2.2.19",

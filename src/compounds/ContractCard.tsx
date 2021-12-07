@@ -1,5 +1,9 @@
 import { FC, useCallback, useState } from "react";
-import { FunctionFragment } from "@ethersproject/abi";
+import {
+  ErrorFragment,
+  EventFragment,
+  FunctionFragment,
+} from "@ethersproject/abi";
 import { InfuraProvider } from "@ethersproject/providers";
 import { Networkish } from "@ethersproject/networks";
 
@@ -9,61 +13,11 @@ import { useContract } from "lib/hooks";
 import TextInput from "components/TextInput";
 import Select from "components/Select";
 import Button from "components/Button";
+
 type Props = {
   address: string;
   abi?: string;
 };
-
-function parseMethod(contractMethod: string, sourceCode?: string) {
-  const matches = contractMethod.match(/^(\w+)\((.+)?\)$/);
-
-  if (!matches) {
-    throw new Error("Invalid argument: contractMethod");
-  }
-
-  const name = matches[1];
-
-  if (!sourceCode) {
-    const args = matches[2]
-      ?.split(",")
-      .map((x) => ({ name: "", type: x, isArray: x.endsWith("[]") }));
-
-    return {
-      name,
-      args,
-    };
-  }
-
-  const lines = sourceCode
-    ?.split("\r\n")
-    .map((x) => x.trim())
-    .filter(Boolean);
-
-  const methodLine = lines?.find(
-    (x) => x.startsWith("function") && x.includes(name)
-  );
-
-  const argsRaw = methodLine?.match(/\((.+)\)/);
-
-  console.log({ argsRaw });
-
-  if (argsRaw) {
-    const args = argsRaw[1]?.split(",").map((x) => {
-      const [type, name] = x.trim().split(" ");
-
-      return {
-        name,
-        type,
-        isArray: type.endsWith("[]"),
-      };
-    });
-
-    return {
-      name,
-      args,
-    };
-  }
-}
 
 function useInfuraProvider(network?: Networkish) {
   return new InfuraProvider(network, process.env.NEXT_PUBLIC_INFURA_ID);
@@ -78,9 +32,13 @@ const ContractCard: FC<Props> = (props) => {
     infuraProvider
   );
 
-  const functionEntries = Object.values(contract?.interface?.functions ?? {});
+  const functions = Object.values(contract?.interface?.functions ?? {});
+  const events = Object.values(contract?.interface?.events ?? {});
+  const errors = Object.values(contract?.interface?.errors ?? {});
 
-  const [selectedEntry, selectEntry] = useState<FunctionFragment>();
+  const [selectedFunction, selectFunction] = useState<FunctionFragment>();
+  const [selectedEvent, selectEvent] = useState<EventFragment>();
+  const [selectedError, selectError] = useState<ErrorFragment>();
 
   const [result, setResult] = useState<any[]>();
 
@@ -89,17 +47,17 @@ const ContractCard: FC<Props> = (props) => {
       return;
     }
 
-    if (selectedEntry) {
+    if (selectedFunction) {
       setResult(undefined);
 
-      const fn = contract.functions[selectedEntry.name];
+      const fn = contract.functions[selectedFunction.name];
 
       if (fn) {
         const result = await fn();
         setResult(result);
       }
     }
-  }, [contract, selectedEntry]);
+  }, [contract, selectedFunction]);
 
   return (
     <section className="grid gap-8 rounded-2xl p-2">
@@ -109,26 +67,53 @@ const ContractCard: FC<Props> = (props) => {
           <Select<FunctionFragment>
             label="Functions"
             labelExtractor={(x) => x.name}
-            value={selectedEntry}
-            onChange={selectEntry}
-            items={functionEntries.map((fragment) => ({
+            value={selectedFunction}
+            onChange={(x) => {
+              setResult(undefined);
+              selectFunction(x);
+            }}
+            items={functions.map((fragment) => ({
               value: fragment,
               label: fragment.name,
             }))}
           />
-          {selectedEntry && (
+          {events?.length > 0 && (
+            <Select<EventFragment>
+              label="Events"
+              labelExtractor={(x) => x.name}
+              value={selectedEvent}
+              onChange={selectEvent}
+              items={events.map((fragment) => ({
+                value: fragment,
+                label: fragment.name,
+              }))}
+            />
+          )}
+          {errors?.length > 0 && (
+            <Select<ErrorFragment>
+              label="Errors"
+              labelExtractor={(x) => x.name}
+              value={selectedError}
+              onChange={selectError}
+              items={errors.map((fragment) => ({
+                value: fragment,
+                label: fragment.name,
+              }))}
+            />
+          )}
+          {selectedFunction && (
             <div className="w-full bg-gray-800 text-white rounded-2xl overflow-hidden grid gap-4">
               <div className="bottom-auto text-xl text-pink-400 pb-6 border-b-2 border-pink-400 grid gap-4 p-4">
-                {selectedEntry.name}
+                {selectedFunction.name}
                 <div className="text-purple-400 text-base font-mono bg-gray-900 p-4 rounded-xl">
-                  {selectedEntry.format("full")}
+                  {selectedFunction.format("full")}
                 </div>
               </div>
               <div className="grid gap-4 text-white text-left p-4">
-                {Boolean(selectedEntry.inputs?.length) && (
+                {Boolean(selectedFunction.inputs?.length) && (
                   <div className="font-bold">Inputs:</div>
                 )}
-                {selectedEntry.inputs?.map((x, i) => (
+                {selectedFunction.inputs?.map((x, i) => (
                   <div key={`input-${i}`}>
                     <TextInput
                       label={
@@ -143,17 +128,20 @@ const ContractCard: FC<Props> = (props) => {
                     />
                   </div>
                 ))}
-
-                {selectedEntry.payable ? (
+                {selectedFunction.payable ? (
                   <Button>Connect</Button>
                 ) : (
                   <Button onClick={handleRun}>Run</Button>
                 )}
 
-                {result && <div>Output:</div>}
-
-                {result &&
-                  result.map((x, i) => <div key={`output-${i}`}>{x}</div>)}
+                {result && (
+                  <>
+                    <div>Result:</div>
+                    {result.map((x, i) => (
+                      <div key={`output-${i}`}>{JSON.stringify(x)}</div>
+                    ))}
+                  </>
+                )}
               </div>
             </div>
           )}

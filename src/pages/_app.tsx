@@ -5,11 +5,11 @@ import { Hydrate, QueryClient, QueryClientProvider } from "react-query";
 import superjson from "superjson";
 import { httpBatchLink } from "@trpc/client/links/httpBatchLink";
 import { loggerLink } from "@trpc/client/links/loggerLink";
+import { withTRPC } from "@trpc/next";
 
+import { AppRouter } from "server/router";
 import "tailwindcss/tailwind.css";
 import "styles/global.css";
-import { withTRPC } from "@trpc/next";
-import { AppRouter } from "server/router";
 
 const MyApp: AppType = ({ Component, pageProps }) => {
   const [queryClient] = useState(() => new QueryClient());

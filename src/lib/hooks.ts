@@ -11,6 +11,7 @@ import detectEthereumProvider from "@metamask/detect-provider";
 import Web3Modal from "web3modal";
 
 import { CONTRACT_NOT_VERIFIED } from "./etherscan";
+import { useAuthStore } from "domain/core/stores/auth";
 
 const PROVIDER_OPTIONS = {
   injected: {
@@ -106,15 +107,8 @@ export function useWeb3Provider() {
   };
 }
 
-export type Web3User =
-  | { kind: "anonymous" }
-  | {
-      kind: "connected";
-      address: string;
-    };
-
 export function useWeb3Auth() {
-  const [user, setUser] = useState<Web3User>({ kind: "anonymous" });
+  const { state, actions } = useAuthStore();
   const { provider, tryConnect } = useWeb3Provider();
 
   const resumeSession = useCallback(async () => {
@@ -128,7 +122,7 @@ export function useWeb3Auth() {
       const signer = provider.getSigner();
       const address = await signer.getAddress();
 
-      setUser({
+      actions.setUser({
         kind: "connected",
         address,
       });
@@ -136,7 +130,7 @@ export function useWeb3Auth() {
     } catch (error) {
       return false;
     }
-  }, [provider]);
+  }, [actions, provider]);
 
   const signinMutation = useCallback(async () => {
     const resumed = await resumeSession();
@@ -151,7 +145,7 @@ export function useWeb3Auth() {
         await $provider.send("eth_requestAccounts", []);
         const signer = $provider.getSigner();
         const address = await signer.getAddress();
-        setUser({
+        actions.setUser({
           kind: "connected",
           address,
         });
@@ -159,7 +153,7 @@ export function useWeb3Auth() {
     } catch (error) {
       console.log("failed to connect", error);
     }
-  }, [provider, resumeSession, tryConnect]);
+  }, [actions, provider, resumeSession, tryConnect]);
 
   const { mutateAsync: signin, isLoading: isSigningIn } =
     useMutation(signinMutation);
@@ -168,12 +162,15 @@ export function useWeb3Auth() {
     resumeSession();
   }, [provider, resumeSession]);
 
-  const isConnected = useMemo(() => user.kind === "connected", [user]);
+  const isConnected = useMemo(
+    () => state.user.kind === "connected",
+    [state.user]
+  );
 
   return {
     signin,
     isSigningIn,
-    user,
+    user: state.user,
     isConnected,
   };
 }
