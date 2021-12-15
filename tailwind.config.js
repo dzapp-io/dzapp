@@ -1,6 +1,9 @@
+/**
+ * @type {import("tailwindcss/tailwind-config").TailwindConfig}
+ */
 module.exports = {
   mode: "jit",
-  purge: [
+  content: [
     "./src/pages/**/*.{js,ts,jsx,tsx,css}",
     "./src/(components|compounds|layouts)/**/*.{js,ts,jsx,tsx,css}",
   ],
