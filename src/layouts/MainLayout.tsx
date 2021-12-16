@@ -5,11 +5,10 @@ import { motion, Variants } from "framer-motion";
 import { MenuIcon, XIcon } from "@heroicons/react/solid";
 
 import styled from "lib/styled";
-import { useWeb3Auth } from "lib/hooks";
-import ConnectToWallet from "compounds/ConnectToWallet";
+
 import Logo from "components/Logo";
 import Box from "components/Box";
-import Button from "components/Button";
+import NavBar from "components/NavBar";
 
 const MAIN_VARIANTS: Variants = {
   hidden: { opacity: 0, x: 200, y: 0 },
@@ -29,24 +28,13 @@ type Props = {
 };
 
 export const MainLayout: FC<Props> = ({ children, title, subTitle }) => {
-  const { user } = useWeb3Auth();
-
   return (
-    <div className="flex flex-col min-h-screen overflow-hidden bg-gradient-to-b from-bluegray to-nearblack text-white">
+    <div className="flex flex-col min-h-screen overflow-hidden bg-gradient-to-b from-bluegray to-nearblack text-white pt-16">
       <Head>
         <title>dZApp - Web3 automation made simple</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Header>
-        {user.kind === "connected" && (
-          <Link href="/workflows">
-            <a>
-              <Button size="lg">+ workflow</Button>
-            </a>
-          </Link>
-        )}
-        <ConnectToWallet />
-      </Header>
+      <Header />
       <main className="flex flex-col items-center justify-center w-full flex-1 md:px-12 px-4 text-center">
         {children}
       </main>
@@ -105,28 +93,8 @@ export const Header: FC = ({ children }) => {
   const [isOpen, setOpen] = useState(false);
 
   return (
-    <header className="p-4 md:py-6 grid gap-4 bg-bluegray text-gray-300 w-full sticky top-0">
-      <Clamp className="flex items-center justify-between">
-        <Link href="/">
-          <a>
-            <Logo size="md" />
-          </a>
-        </Link>
-        <div className="gap-2 grid-flow-col place-items-center md:grid hidden">
-          {children}
-        </div>
-        <div className="grid gap-2 grid-flow-col place-items-end md:hidden w-full">
-          <button
-            className="outline-none focus:ring-2 ring-purple-500/60 bg-nearblack h-10 w-10 rounded-full p-2 text-pink-500"
-            onClick={() => setOpen((x) => !x)}
-          >
-            {isOpen ? <XIcon /> : <MenuIcon />}
-          </button>
-        </div>
-      </Clamp>
-      {isOpen && (
-        <Clamp className="grid gap-2 place-items-end">{children}</Clamp>
-      )}
+    <header className="fixed w-full top-0">
+      <NavBar />
     </header>
   );
 };
