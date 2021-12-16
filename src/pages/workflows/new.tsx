@@ -6,9 +6,9 @@ import { Contract } from "@ethersproject/contracts";
 import { getAddress } from "@ethersproject/address";
 import * as zod from "zod";
 
-import MainLayout from "layouts/MainLayout";
 import { useContractSourceQuery } from "lib/etherscan";
-import { useContract } from "lib/hooks";
+
+import { AnimatedCardLayout } from "layouts/MainLayout";
 import TextInput from "components/TextInput";
 import Button from "components/Button";
 import TextArea from "components/TextArea";
@@ -63,7 +63,7 @@ const NewWorkflow: NextPage = () => {
   }, [contractData, setValue]);
 
   return (
-    <MainLayout title="New Workflow" subTitle="Start connecting dApps">
+    <AnimatedCardLayout title="New Workflow" subTitle="Start connecting dApps">
       <form
         method="post"
         onSubmit={submitHandler}
@@ -86,7 +86,7 @@ const NewWorkflow: NextPage = () => {
         {contractData && <ContractCard address={address} />}
         <Button type="submit">Continue</Button>
       </form>
-    </MainLayout>
+    </AnimatedCardLayout>
   );
 };
 

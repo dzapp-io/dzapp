@@ -10,8 +10,8 @@ import WalletConnectProvider from "@walletconnect/web3-provider";
 import detectEthereumProvider from "@metamask/detect-provider";
 import Web3Modal from "web3modal";
 
-import { CONTRACT_NOT_VERIFIED } from "./etherscan";
 import { useAuthStore } from "domain/core/stores/auth";
+import { CONTRACT_NOT_VERIFIED } from "./etherscan";
 
 const PROVIDER_OPTIONS = {
   injected: {
@@ -26,9 +26,53 @@ const PROVIDER_OPTIONS = {
 };
 
 export function useWeb3Provider() {
-  const [provider, setProvider] = useState<Web3Provider | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<unknown>(null);
+  const providerRef = useRef<Web3Provider>();
+
+  const handleAccountChanged = useCallback((accounts: string[]) => {
+    console.log("accounts changed:", accounts);
+  }, []);
+
+  const handleChainChanged = useCallback((chainId: number) => {
+    console.log("chain changed:", chainId);
+  }, []);
+
+  const handleConnect = useCallback((info: { chainId: number }) => {
+    console.log("connect", info);
+  }, []);
+
+  const unregisterListeners = useCallback(
+    (provider: Web3Provider) => {
+      provider.off("accountsChanged", handleAccountChanged);
+      provider.off("chainChanged", handleChainChanged);
+      provider.off("connect", handleConnect);
+
+      console.log("web3: unregistered listeners");
+    },
+    [handleAccountChanged, handleChainChanged, handleConnect]
+  );
+
+  const registerListeners = useCallback(
+    (provider: Web3Provider) => {
+      console.log(provider._events);
+      provider.on("accountsChanged", handleAccountChanged);
+
+      // Subscribe to chainId change
+      provider.on("chainChanged", handleChainChanged);
+
+      // Subscribe to provider connection
+      provider.on("connect", handleConnect);
+
+      // Subscribe to provider disconnection
+      provider.on("disconnect", (error: { code: number; message: string }) => {
+        console.log("disconnect", error);
+      });
+
+      console.log("web3: registered listeners");
+    },
+    [handleAccountChanged, handleChainChanged, handleConnect]
+  );
 
   useEffect(() => {
     async function task() {
@@ -41,29 +85,9 @@ export function useWeb3Provider() {
             externalProvider as ExternalProvider
           );
 
-          setProvider(provider);
+          registerListeners(provider);
 
-          provider.on("accountsChanged", (accounts: string[]) => {
-            console.log("accountsChanged", accounts);
-          });
-
-          // Subscribe to chainId change
-          provider.on("chainChanged", (chainId: number) => {
-            console.log("chainChanged", chainId);
-          });
-
-          // Subscribe to provider connection
-          provider.on("connect", (info: { chainId: number }) => {
-            console.log("connect", info);
-          });
-
-          // Subscribe to provider disconnection
-          provider.on(
-            "disconnect",
-            (error: { code: number; message: string }) => {
-              console.log("disconnect", error);
-            }
-          );
+          providerRef.current = provider;
         }
       } catch (error) {
         setError(error);
@@ -72,10 +96,22 @@ export function useWeb3Provider() {
       }
     }
 
-    if (!provider) {
+    if (!providerRef.current) {
       task();
     }
-  }, [provider]);
+  }, [providerRef, registerListeners]);
+
+  useEffect(() => {
+    if (providerRef.current) {
+      registerListeners(providerRef.current);
+    }
+
+    return () => {
+      if (providerRef.current) {
+        unregisterListeners(providerRef.current);
+      }
+    };
+  }, [providerRef, registerListeners, unregisterListeners]);
 
   const handleTryConnect = useCallback(async () => {
     try {
@@ -83,11 +119,12 @@ export function useWeb3Provider() {
         cacheProvider: true,
         providerOptions: PROVIDER_OPTIONS,
       });
+
       const externalProvider = await web3Modal.connect();
 
       if (externalProvider) {
         const provider = new Web3Provider(externalProvider as ExternalProvider);
-        setProvider(provider);
+        providerRef.current = provider;
         return provider;
       }
     } catch (error) {
@@ -99,7 +136,7 @@ export function useWeb3Provider() {
   const isError = useMemo(() => Boolean(error), [error]);
 
   return {
-    provider,
+    provider: providerRef.current,
     error,
     isError,
     isLoading,
@@ -155,8 +192,17 @@ export function useWeb3Auth() {
     }
   }, [actions, provider, resumeSession, tryConnect]);
 
+  const disconnectMutation = useCallback(async () => {
+    if (provider) {
+      actions.reset();
+    }
+  }, [actions, provider]);
+
   const { mutateAsync: signin, isLoading: isSigningIn } =
     useMutation(signinMutation);
+
+  const { mutateAsync: disconnect, isLoading: isDisconnecting } =
+    useMutation(disconnectMutation);
 
   useEffect(() => {
     resumeSession();
@@ -169,7 +215,9 @@ export function useWeb3Auth() {
 
   return {
     signin,
+    disconnect,
     isSigningIn,
+    isDisconnecting,
     user: state.user,
     isConnected,
   };

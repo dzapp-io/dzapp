@@ -2,7 +2,7 @@ import { NextPage } from "next";
 import { useRouter } from "next/router";
 import { PlusIcon } from "@heroicons/react/solid";
 
-import MainLayout from "layouts/MainLayout";
+import { AnimatedCardLayout } from "layouts/MainLayout";
 import { useCallback } from "react";
 import Button from "components/Button";
 
@@ -13,7 +13,7 @@ const AppIndex: NextPage = () => {
   }, [router]);
 
   return (
-    <MainLayout>
+    <AnimatedCardLayout>
       <div className="text-center">
         <svg
           className="mx-auto h-12 w-12 text-gray-400"
@@ -41,7 +41,7 @@ const AppIndex: NextPage = () => {
           </Button>
         </div>
       </div>
-    </MainLayout>
+    </AnimatedCardLayout>
   );
 };
 

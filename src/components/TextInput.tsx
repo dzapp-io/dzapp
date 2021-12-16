@@ -1,5 +1,6 @@
 import { forwardRef, ReactNode } from "react";
-import cn from "classnames";
+import clsx from "clsx";
+
 import Label from "components/Label";
 
 type Props = JSX.IntrinsicElements["input"] & {
@@ -17,7 +18,7 @@ const TextInput = forwardRef<HTMLInputElement, Props>(
     const field = (
       <input
         type={props.type}
-        className={cn(
+        className={clsx(
           "shadow-sm focus:ring-purple-500 focus:border-purple-500 block w-full sm:text-sm border-gray-300 rounded-md text-gray-900",
           className
         )}

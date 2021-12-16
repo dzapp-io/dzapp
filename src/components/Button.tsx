@@ -1,5 +1,5 @@
 import { FC } from "react";
-import cn from "classnames";
+import clsx from "clsx";
 import { PulseLoader } from "react-spinners";
 
 type Props = JSX.IntrinsicElements["button"] & {
@@ -21,7 +21,7 @@ const Button: FC<Props> = ({
   return (
     <button
       type="button"
-      className={cn(
+      className={clsx(
         "inline-flex items-center justify-center px-6 py-3 border border-transparent font-medium rounded-full shadow-sm  focus:outline-none focus:ring-2 focus:ring-offset-2",
         {
           "text-white bg-purple-600 hover:bg-purple-700 focus:ring-purple-500":

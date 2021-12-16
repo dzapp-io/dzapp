@@ -1,6 +1,6 @@
 import { FC, useEffect, useRef } from "react";
 import jazzIcon from "@metamask/jazzicon";
-import classNames from "classnames";
+import clsx from "clsx";
 
 const Identicon: FC<{ account: string; size?: number; className?: string }> = ({
   account,
@@ -20,10 +20,7 @@ const Identicon: FC<{ account: string; size?: number; className?: string }> = ({
 
   return (
     <div
-      className={classNames(
-        "rounded-full m-auto grid place-items-center",
-        className
-      )}
+      className={clsx("rounded-full m-auto grid place-items-center", className)}
       style={{ width: size * 1.125, height: size * 1.125 }}
       ref={targetRef}
     />

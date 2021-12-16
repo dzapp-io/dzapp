@@ -1,44 +1,57 @@
-import { useCallback } from "react";
-import { useRouter } from "next/router";
-
-import { useWeb3Auth } from "lib/hooks";
+import { useState } from "react";
+import clsx from "clsx";
+import Typewriter from "typewriter-effect";
 
 import MainLayout from "layouts/MainLayout";
-import Button from "components/Button";
-import Identicon from "components/Identicon";
+
+import Logo from "components/Logo";
 
 export default function Home() {
-  const { signin, user } = useWeb3Auth();
-  const router = useRouter();
+  return (
+    <MainLayout title="">
+      <Hero />
+    </MainLayout>
+  );
+}
 
-  const handleConnectWallet = useCallback(async () => {
-    try {
-      await signin();
-    } catch (error) {
-      console.log("failed to connect", error);
-    }
-  }, [signin]);
+function Hero() {
+  const [introComplete, setIntroComplete] = useState(false);
 
-  const handleGetStarted = useCallback(() => {
-    router.push("/workflows");
-  }, [router]);
+  const steps = [
+    "Get stuff done...",
+    "Build workflows...",
+    "Automate Web3 with",
+  ];
 
   return (
-    <MainLayout title="Hello">
-      {user.kind === "anonymous" && (
-        <Button onClick={handleConnectWallet}>Connect Wallet</Button>
-      )}
+    <div className="grid place-content-center gap-4">
+      <h1 className="text-3xl uppercase font-mono font-bold text-white flex text-center">
+        {introComplete ? (
+          steps[steps.length - 1]
+        ) : (
+          <Typewriter
+            onInit={(typewriter) => {
+              steps.forEach((step, i) => {
+                typewriter.typeString(step);
+                if (i !== steps.length - 1) {
+                  typewriter.pauseFor(1000).deleteAll();
+                }
+              }, typewriter);
 
-      {user.kind === "connected" && (
-        <div className="grid gap-8">
-          <Identicon
-            size={64}
-            account={user.address}
-            className="bg-gradient-to-br from-pink-400 to-purple-800"
+              typewriter
+                .pauseFor(300)
+                .callFunction(setIntroComplete.bind({}, true))
+                .start();
+            }}
           />
-          <Button onClick={handleGetStarted}>Lets go!</Button>
-        </div>
-      )}
-    </MainLayout>
+        )}
+      </h1>
+      <Logo
+        size="3xl"
+        className={clsx("transition-opacity duration-1000", {
+          "opacity-0": !introComplete,
+        })}
+      />
+    </div>
   );
 }
