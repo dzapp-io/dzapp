@@ -1,7 +1,8 @@
-import { FC } from "react";
+import { FC, useState } from "react";
 import Head from "next/head";
 import Link from "next/link";
 import { motion, Variants } from "framer-motion";
+import { MenuIcon, XIcon } from "@heroicons/react/solid";
 
 import styled from "lib/styled";
 import { useWeb3Auth } from "lib/hooks";
@@ -101,18 +102,31 @@ export const AnimatedCard: FC<Props> = ({ children, title, subTitle }) => (
 export default MainLayout;
 
 export const Header: FC = ({ children }) => {
+  const [isOpen, setOpen] = useState(false);
+
   return (
-    <header className="p-4 md:py-6 bg-bluegray text-gray-300 w-full sticky top-0">
+    <header className="p-4 md:py-6 grid gap-4 bg-bluegray text-gray-300 w-full sticky top-0">
       <Clamp className="flex items-center justify-between">
         <Link href="/">
           <a>
             <Logo size="md" />
           </a>
         </Link>
-        <div className="grid gap-2 grid-flow-col place-items-center">
+        <div className="gap-2 grid-flow-col place-items-center md:grid hidden">
           {children}
         </div>
+        <div className="grid gap-2 grid-flow-col place-items-end md:hidden w-full">
+          <button
+            className="outline-none focus:ring-2 ring-purple-500/60 bg-nearblack h-10 w-10 rounded-full p-2 text-pink-500"
+            onClick={() => setOpen((x) => !x)}
+          >
+            {isOpen ? <XIcon /> : <MenuIcon />}
+          </button>
+        </div>
       </Clamp>
+      {isOpen && (
+        <Clamp className="grid gap-2 place-items-end">{children}</Clamp>
+      )}
     </header>
   );
 };

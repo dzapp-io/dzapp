@@ -23,7 +23,7 @@ function Hero() {
 
   return (
     <div className="grid place-content-center gap-4">
-      <h1 className="text-3xl uppercase font-mono font-bold text-white flex text-center">
+      <h1 className="text-3xl uppercase font-mono font-bold text-white flex text-center whitespace-nowrap">
         {introComplete ? (
           HERO_STEPS[LAST_STEP_INDEX]
         ) : (
