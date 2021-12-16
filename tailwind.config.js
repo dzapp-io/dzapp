@@ -9,7 +9,10 @@ module.exports = {
   darkMode: false, // or 'media' or 'class'
   theme: {
     extend: {
-      colors: {},
+      colors: {
+        bluegray: "#0f172a",
+        nearblack: "#0a0a11",
+      },
       fontFamily: {
         sans: "'Rubik', sans-serif",
         display: "'Righteous', cursive",

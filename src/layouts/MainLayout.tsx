@@ -31,7 +31,7 @@ export const MainLayout: FC<Props> = ({ children, title, subTitle }) => {
   const { user } = useWeb3Auth();
 
   return (
-    <div className="flex flex-col min-h-screen overflow-hidden text-white">
+    <div className="flex flex-col min-h-screen overflow-hidden bg-gradient-to-b from-bluegray to-nearblack text-white">
       <Head>
         <title>dZApp - Web3 automation made simple</title>
         <link rel="icon" href="/favicon.ico" />
@@ -102,7 +102,7 @@ export default MainLayout;
 
 export const Header: FC = ({ children }) => {
   return (
-    <header className="p-4 md:py-6 bg-gray-900/30 text-gray-300 w-full sticky top-0">
+    <header className="p-4 md:py-6 bg-bluegray text-gray-300 w-full sticky top-0">
       <Clamp className="flex items-center justify-between">
         <Link href="/">
           <a>
@@ -120,7 +120,7 @@ export const Header: FC = ({ children }) => {
 export const Clamp = styled.div.tw`w-full max-w-3xl m-auto`;
 
 export const Footer = () => (
-  <footer className="flex items-center w-full h-24 bg-gray-900/50 text-purple-200">
+  <footer className="flex items-center w-full h-24 bg-bluegray text-purple-200">
     <Clamp className="flex justify-center">
       <span className="font-display">
         &copy;{new Date().getFullYear()} / <Logo size="sm" />
