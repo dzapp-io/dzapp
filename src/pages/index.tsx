@@ -14,26 +14,31 @@ export default function Home() {
   );
 }
 
+const HERO_STEPS = [
+  "Get stuff done...",
+  "Build workflows...",
+  "Automate Web3 with",
+];
+
+const LAST_STEP_INDEX = HERO_STEPS.length - 1;
+
 function Hero() {
   const [introComplete, setIntroComplete] = useState(false);
-
-  const steps = [
-    "Get stuff done...",
-    "Build workflows...",
-    "Automate Web3 with",
-  ];
 
   return (
     <div className="grid place-content-center gap-4">
       <h1 className="text-3xl uppercase font-mono font-bold text-white flex text-center">
         {introComplete ? (
-          steps[steps.length - 1]
+          HERO_STEPS[LAST_STEP_INDEX]
         ) : (
           <Typewriter
             onInit={(typewriter) => {
-              steps.forEach((step, i) => {
+              HERO_STEPS.forEach((step, i) => {
                 typewriter.typeString(step);
-                if (i !== steps.length - 1) {
+
+                // if it isn't the last step,
+                // pause for 1s, then delete
+                if (i !== LAST_STEP_INDEX) {
                   typewriter.pauseFor(1000).deleteAll();
                 }
               }, typewriter);

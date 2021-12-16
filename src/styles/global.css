@@ -1,5 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Fira+Code:wght@500&family=Righteous&family=Rubik:wght@400;500;600;700&display=swap");
 
 html {
-  @apply bg-gradient-to-b from-slate-800 to-gray-900;
+  @apply from-[#0f172a] to-[#0a0a11] bg-gradient-to-b;
 }
