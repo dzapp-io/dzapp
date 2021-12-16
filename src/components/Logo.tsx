@@ -9,7 +9,7 @@ const Logo: FC<Props> = ({ size, className, ...props }) => {
   return (
     <span
       className={clsx(
-        "font-semibold text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-purple-700 font-display tracking-tight",
+        "font-semibold text-transparent bg-clip-text bg-gradient-to-br from-pink-400 to-purple-800 font-display tracking-[-0.025em]",
         {
           "text-8xl": size === "3xl",
           "text-7xl": size === "2xl",

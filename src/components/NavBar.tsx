@@ -1,4 +1,4 @@
-import { Fragment } from "react";
+import { FC, Fragment } from "react";
 import Link from "next/link";
 import clsx from "clsx";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
@@ -7,8 +7,47 @@ import { BellIcon, MenuIcon, XIcon } from "@heroicons/react/outline";
 import LogoSvg from "assets/icons/logo.svg";
 import ConnectToWallet from "compounds/ConnectToWallet";
 import Logo from "components/Logo";
+import { useRouter } from "next/router";
+
+const MenuList: FC<{
+  activePath: string;
+  items: { label: string; href: string }[];
+}> = (props) => {
+  return (
+    <div className="flex space-x-4">
+      {/* Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" */}
+      {props.items.map((link) => (
+        <Link key={link.href} href={link.href}>
+          <a
+            className={clsx(
+              "px-3 py-2 rounded-md transition-colors duration-300",
+              link.href === props.activePath
+                ? "bg-nearblack text-white"
+                : "text-gray-300 hover:bg-gray-700 hover:text-white"
+            )}
+          >
+            {link.label}
+          </a>
+        </Link>
+      ))}
+    </div>
+  );
+};
 
 export default function NavBar() {
+  const router = useRouter();
+
+  const menuItems = [
+    {
+      href: "/workflows",
+      label: "workflows",
+    },
+    {
+      href: "/contracts",
+      label: "contracts",
+    },
+  ];
+
   return (
     <Disclosure as="nav" className="bg-bluegray p-4">
       {({ open }) => (
@@ -24,6 +63,9 @@ export default function NavBar() {
                     </a>
                   </Link>
                 </div>
+              </div>
+              <div className="hidden sm:block sm:ml-6">
+                <MenuList activePath={router.asPath} items={menuItems} />
               </div>
               <div className="hidden sm:ml-6 sm:block">
                 <div className="flex items-center">
@@ -55,15 +97,16 @@ export default function NavBar() {
                       <Menu.Items className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
                         <Menu.Item>
                           {({ active }) => (
-                            <a
-                              href="#"
-                              className={clsx(
-                                active ? "bg-gray-100" : "",
-                                "block px-4 py-2 text-sm text-gray-700"
-                              )}
-                            >
-                              Your Profile
-                            </a>
+                            <Link href="/workflows">
+                              <a
+                                className={clsx(
+                                  active ? "bg-gray-100" : "",
+                                  "block px-4 py-2 text-sm text-gray-700"
+                                )}
+                              >
+                                My Workflows
+                              </a>
+                            </Link>
                           )}
                         </Menu.Item>
                         <Menu.Item>
@@ -88,7 +131,7 @@ export default function NavBar() {
                                 "block px-4 py-2 text-sm text-gray-700"
                               )}
                             >
-                              Sign out
+                              Disconnect
                             </a>
                           )}
                         </Menu.Item>
@@ -112,15 +155,21 @@ export default function NavBar() {
 
           <Disclosure.Panel className="sm:hidden">
             <div className="px-2 pt-2 pb-3 space-y-1">
-              {/* Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" */}
-              <Link href="/workflows" passHref>
-                <Disclosure.Button
-                  as="a"
-                  className="bg-gray-900 text-white block px-3 py-2 rounded-md text-base font-medium"
-                >
-                  Workflows
-                </Disclosure.Button>
-              </Link>
+              {menuItems.map((item) => (
+                <Link key={item.href} href="/workflows" passHref>
+                  <Disclosure.Button
+                    as="a"
+                    className={clsx(
+                      "bg-gray-900 text-gray-400 block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-700 hover:text-white",
+                      {
+                        "bg-nearblack text-white": item.href === router.asPath,
+                      }
+                    )}
+                  >
+                    {item.label}
+                  </Disclosure.Button>
+                </Link>
+              ))}
             </div>
             <div className="pt-4 pb-3 border-t border-gray-700">
               <div className="flex items-center px-5">

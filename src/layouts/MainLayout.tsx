@@ -95,6 +95,7 @@ export const Header: FC = ({ children }) => {
   return (
     <header className="fixed w-full top-0">
       <NavBar />
+      <div className="md:hidden w-full bg-gradient-to-r from-pink-400/30 to-purple-800/30 opacity-30 h-1" />
     </header>
   );
 };

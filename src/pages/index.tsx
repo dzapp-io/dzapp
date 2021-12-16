@@ -4,7 +4,7 @@ import Typewriter from "typewriter-effect";
 
 import MainLayout from "layouts/MainLayout";
 
-import Logo from "components/Logo";
+import LogoSvg from "assets/icons/dzapp.svg";
 
 export default function Home() {
   return (
@@ -47,8 +47,8 @@ function Hero() {
           />
         )}
       </h1>
-      <Logo
-        size="3xl"
+
+      <LogoSvg
         className={clsx("transition-opacity duration-1000", {
           "opacity-0": !introComplete,
         })}

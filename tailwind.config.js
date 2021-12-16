@@ -16,6 +16,7 @@ module.exports = {
       fontFamily: {
         sans: "'Rubik', sans-serif",
         display: "'Righteous', cursive",
+        "display-2": "'Bungee Outline', cursive",
         mono: "'Fira Code', monospace",
       },
       backgroundImage: (_theme) => ({
