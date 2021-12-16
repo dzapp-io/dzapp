@@ -14,11 +14,7 @@ export default function Home() {
   );
 }
 
-const HERO_STEPS = [
-  "Get stuff done...",
-  "Build workflows...",
-  "Automate Web3 with",
-];
+const HERO_STEPS = ["Get stuff done", "Build workflows", "Automate Web3 with"];
 
 const LAST_STEP_INDEX = HERO_STEPS.length - 1;
 
