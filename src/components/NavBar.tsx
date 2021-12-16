@@ -43,7 +43,7 @@ export default function NavBar() {
       label: "workflows",
     },
     {
-      href: "/contracts",
+      href: "/#",
       label: "contracts",
     },
   ];
