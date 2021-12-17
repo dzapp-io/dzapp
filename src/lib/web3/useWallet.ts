@@ -4,6 +4,8 @@ import create from "zustand";
 import shallow from "zustand/shallow";
 import { useCallback, useEffect } from "react";
 
+import { WEB3MODAL_OPTIONS } from "./config";
+
 type WalletState = {
   provider?: Web3Provider;
   account?: Account;
@@ -25,7 +27,9 @@ type UseWalletResult = WalletState & {
   disconnect(): Promise<void>;
 };
 
-export function useWallet(): UseWalletResult {
+export function useWallet(
+  web3ModalOptions = WEB3MODAL_OPTIONS
+): UseWalletResult {
   // Retrieve the current values from the store, and automatically re-render on updates
   const account = useWalletStore((state) => state.account, shallow);
   const network = useWalletStore((state) => state.network, shallow);
@@ -33,41 +37,44 @@ export function useWallet(): UseWalletResult {
   const web3Modal = useWalletStore((state) => state.web3Modal, shallow);
 
   useEffect(() => {
-    useWalletStore.setState({ web3Modal: new Web3Modal() });
-  }, []);
+    useWalletStore.setState({ web3Modal: new Web3Modal(web3ModalOptions) });
+  }, [web3ModalOptions]);
 
-  const connect = useCallback(async (opts: Partial<ICoreOptions>) => {
-    // Launch modal with the given options
-    const web3Modal = new Web3Modal(opts);
-    useWalletStore.setState({ web3Modal });
-    const web3ModalProvider = await web3Modal.connect();
+  const connect = useCallback(
+    async (opts: Partial<ICoreOptions> = web3ModalOptions) => {
+      // Launch modal with the given options
+      const web3Modal = new Web3Modal(opts);
+      useWalletStore.setState({ web3Modal });
+      const web3ModalProvider = await web3Modal.connect();
 
-    // Set up Ethers provider and initial state with the response from the web3Modal
-    const initialProvider = new Web3Provider(web3ModalProvider, "any");
-    const getNetwork = () => initialProvider.getNetwork();
-    const initialAccounts = await initialProvider.listAccounts();
-    const initialNetwork = await getNetwork();
+      // Set up Ethers provider and initial state with the response from the web3Modal
+      const initialProvider = new Web3Provider(web3ModalProvider, "any");
+      const getNetwork = () => initialProvider.getNetwork();
+      const initialAccounts = await initialProvider.listAccounts();
+      const initialNetwork = await getNetwork();
 
-    useWalletStore.setState({
-      provider: initialProvider,
-      network: initialNetwork,
-      account: initialAccounts[0],
-    });
+      useWalletStore.setState({
+        provider: initialProvider,
+        network: initialNetwork,
+        account: initialAccounts[0],
+      });
 
-    // Set up event listeners to handle state changes
-    web3ModalProvider.on("accountsChanged", (accounts: string[]) => {
-      useWalletStore.setState({ account: accounts[0] });
-    });
+      // Set up event listeners to handle state changes
+      web3ModalProvider.on("accountsChanged", (accounts: string[]) => {
+        useWalletStore.setState({ account: accounts[0] });
+      });
 
-    web3ModalProvider.on("chainChanged", async (_chainId: string) => {
-      const network = await getNetwork();
-      useWalletStore.setState({ network });
-    });
+      web3ModalProvider.on("chainChanged", async (_chainId: string) => {
+        const network = await getNetwork();
+        useWalletStore.setState({ network });
+      });
 
-    web3ModalProvider.on("disconnect", () => {
-      web3Modal.clearCachedProvider();
-    });
-  }, []);
+      web3ModalProvider.on("disconnect", () => {
+        web3Modal.clearCachedProvider();
+      });
+    },
+    [web3ModalOptions]
+  );
 
   const disconnect = useCallback(async () => {
     web3Modal?.clearCachedProvider();

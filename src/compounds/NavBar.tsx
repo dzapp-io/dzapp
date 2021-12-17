@@ -1,4 +1,4 @@
-import { FC, Fragment, useEffect } from "react";
+import { FC, Fragment, useCallback, useEffect } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import clsx from "clsx";
@@ -54,6 +54,18 @@ export default function NavBar() {
   useEffect(
     () => {
       try {
+        connect({} /* try connect to injected provider only */);
+      } catch (error) {
+        console.log("failed to connect", error);
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  );
+
+  const handleTryConnect = useCallback(
+    () => {
+      try {
         connect();
       } catch (error) {
         console.log("failed to connect", error);
@@ -62,6 +74,11 @@ export default function NavBar() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
+
+  const connectToWalletButton = (
+    <ConnectToWallet account={account} onConnect={handleTryConnect} />
+  );
+
   return (
     <Disclosure as="nav" className="bg-bluegray p-4">
       {({ open }) => (
@@ -96,10 +113,7 @@ export default function NavBar() {
                     <div>
                       <Menu.Button className="bg-gray-800 flex text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
                         <span className="sr-only">Open user menu</span>
-                        <ConnectToWallet
-                          account={account}
-                          onConnect={connect}
-                        />
+                        {connectToWalletButton}
                       </Menu.Button>
                     </div>
                     <Transition
@@ -147,6 +161,10 @@ export default function NavBar() {
                                 active ? "bg-gray-100" : "",
                                 "block px-4 py-2 text-sm text-gray-700"
                               )}
+                              onClick={(e) => {
+                                e.preventDefault();
+                                disconnect();
+                              }}
                             >
                               Disconnect
                             </a>
@@ -190,9 +208,7 @@ export default function NavBar() {
             </div>
             <div className="pt-4 pb-3 border-t border-gray-700">
               <div className="flex items-center px-5">
-                <div className="flex-shrink-0">
-                  <ConnectToWallet />
-                </div>
+                <div className="flex-shrink-0">{connectToWalletButton}</div>
                 <button
                   type="button"
                   className="ml-auto flex-shrink-0 bg-gray-800 p-1 rounded-full text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
