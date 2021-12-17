@@ -1,13 +1,10 @@
 import { FC, useState } from "react";
 import Head from "next/head";
-import Link from "next/link";
 import { motion, Variants } from "framer-motion";
-import { MenuIcon, XIcon } from "@heroicons/react/solid";
 
 import styled from "lib/styled";
 
 import Logo from "components/Logo";
-import Box from "components/Box";
 import NavBar from "compounds/NavBar";
 
 const MAIN_VARIANTS: Variants = {
@@ -34,7 +31,9 @@ export const MainLayout: FC<Props> = ({ children, title, subTitle }) => {
         <title>dZApp - Web3 automation made simple</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Header />
+      <Header>
+        <NavBar />
+      </Header>
       <main className="flex flex-col items-center justify-center w-full flex-1 md:px-12 px-4 text-center">
         {children}
       </main>
@@ -58,9 +57,9 @@ export const AnimatedCard: FC<Props> = ({ children, title, subTitle }) => (
     animate="enter"
     exit="exit"
     transition={{ type: "spring" }}
-    className="relative w-full mx-auto max-w-3xl"
+    className="md:relative w-full mx-auto max-w-3xl"
   >
-    <Box className="p-12 my-8 w-full md:ring md:shadow-xl bg-gray-900 text-purple-200 ring-purple-700/80 rounded-2xl">
+    <div className="p-12 my-8 w-full md:ring md:shadow-xl bg-gray-900 text-purple-200 ring-purple-700/80 rounded-2xl">
       {(title || subTitle) && (
         <motion.div
           initial="hidden"
@@ -83,19 +82,17 @@ export const AnimatedCard: FC<Props> = ({ children, title, subTitle }) => (
         </motion.div>
       )}
       {children}
-    </Box>
+    </div>
   </motion.div>
 );
 
 export default MainLayout;
 
 export const Header: FC = ({ children }) => {
-  const [isOpen, setOpen] = useState(false);
-
   return (
     <header className="fixed w-full top-0">
-      <NavBar />
-      <div className="md:hidden w-full bg-gradient-to-r from-pink-400/30 to-purple-800/30 opacity-30 h-1" />
+      {children}
+      <div className="md:hidden w-full bg-gradient-to-r from-pink-400 to-purple-800 opacity-30 h-1" />
     </header>
   );
 };
