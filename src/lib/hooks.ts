@@ -8,7 +8,6 @@ import { Contract } from "@ethersproject/contracts";
 import WalletConnectProvider from "@walletconnect/web3-provider";
 import detectEthereumProvider from "@metamask/detect-provider";
 import Web3Modal from "web3modal";
-import { useWeb3React } from "@web3-react/core";
 
 import { CONTRACT_NOT_VERIFIED } from "./etherscan";
 
@@ -32,8 +31,6 @@ export function useWeb3Modal() {
 }
 
 export function useWeb3Provider() {
-  const { activate, connector, account, library } =
-    useWeb3React<Web3Provider>();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<unknown>(null);
   const providerRef = useRef<Web3Provider>();
