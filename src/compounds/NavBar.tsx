@@ -1,13 +1,15 @@
-import { FC, Fragment } from "react";
+import { FC, Fragment, useEffect } from "react";
+import { useRouter } from "next/router";
 import Link from "next/link";
 import clsx from "clsx";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { BellIcon, MenuIcon, XIcon } from "@heroicons/react/outline";
 
-import LogoSvg from "assets/icons/logo.svg";
-import ConnectToWallet from "compounds/ConnectToWallet";
+import { useWallet } from "lib/web3/useWallet";
+import ConnectToWallet from "components/ConnectToWallet";
 import Logo from "components/Logo";
-import { useRouter } from "next/router";
+
+import LogoSvg from "assets/icons/logo.svg";
 
 const MenuList: FC<{
   activePath: string;
@@ -34,20 +36,32 @@ const MenuList: FC<{
   );
 };
 
+const MENU_ITEMS = [
+  {
+    href: "/workflows",
+    label: "workflows",
+  },
+  {
+    href: "/#",
+    label: "contracts",
+  },
+];
+
 export default function NavBar() {
   const router = useRouter();
+  const { account, connect, disconnect } = useWallet();
 
-  const menuItems = [
-    {
-      href: "/workflows",
-      label: "workflows",
+  useEffect(
+    () => {
+      try {
+        connect();
+      } catch (error) {
+        console.log("failed to connect", error);
+      }
     },
-    {
-      href: "/#",
-      label: "contracts",
-    },
-  ];
-
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  );
   return (
     <Disclosure as="nav" className="bg-bluegray p-4">
       {({ open }) => (
@@ -65,7 +79,7 @@ export default function NavBar() {
                 </div>
               </div>
               <div className="hidden sm:block sm:ml-6">
-                <MenuList activePath={router.asPath} items={menuItems} />
+                <MenuList activePath={router.asPath} items={MENU_ITEMS} />
               </div>
               <div className="hidden sm:ml-6 sm:block">
                 <div className="flex items-center">
@@ -82,7 +96,10 @@ export default function NavBar() {
                     <div>
                       <Menu.Button className="bg-gray-800 flex text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
                         <span className="sr-only">Open user menu</span>
-                        <ConnectToWallet />
+                        <ConnectToWallet
+                          account={account}
+                          onConnect={connect}
+                        />
                       </Menu.Button>
                     </div>
                     <Transition
@@ -155,7 +172,7 @@ export default function NavBar() {
 
           <Disclosure.Panel className="sm:hidden">
             <div className="px-2 pt-2 pb-3 space-y-1">
-              {menuItems.map((item) => (
+              {MENU_ITEMS.map((item) => (
                 <Link key={item.href} href="/workflows" passHref>
                   <Disclosure.Button
                     as="a"

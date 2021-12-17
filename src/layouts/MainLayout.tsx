@@ -8,7 +8,7 @@ import styled from "lib/styled";
 
 import Logo from "components/Logo";
 import Box from "components/Box";
-import NavBar from "components/NavBar";
+import NavBar from "compounds/NavBar";
 
 const MAIN_VARIANTS: Variants = {
   hidden: { opacity: 0, x: 200, y: 0 },

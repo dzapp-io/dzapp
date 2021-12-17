@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useMutation } from "react-query";
 import {
   Provider,
   Web3Provider,
@@ -9,8 +8,8 @@ import { Contract } from "@ethersproject/contracts";
 import WalletConnectProvider from "@walletconnect/web3-provider";
 import detectEthereumProvider from "@metamask/detect-provider";
 import Web3Modal from "web3modal";
+import { useWeb3React } from "@web3-react/core";
 
-import { useAuthStore } from "domain/core/stores/auth";
 import { CONTRACT_NOT_VERIFIED } from "./etherscan";
 
 const PROVIDER_OPTIONS = {
@@ -25,7 +24,16 @@ const PROVIDER_OPTIONS = {
   },
 };
 
+export function useWeb3Modal() {
+  return new Web3Modal({
+    cacheProvider: true,
+    providerOptions: PROVIDER_OPTIONS,
+  });
+}
+
 export function useWeb3Provider() {
+  const { activate, connector, account, library } =
+    useWeb3React<Web3Provider>();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<unknown>(null);
   const providerRef = useRef<Web3Provider>();
@@ -42,11 +50,18 @@ export function useWeb3Provider() {
     console.log("connect", info);
   }, []);
 
+  const handleDisconnect = useCallback(
+    (error: { code: number; message: string }) => {
+      console.log("disconnect", error);
+    },
+    []
+  );
+
   const unregisterListeners = useCallback(
     (provider: Web3Provider) => {
-      provider.off("accountsChanged", handleAccountChanged);
-      provider.off("chainChanged", handleChainChanged);
-      provider.off("connect", handleConnect);
+      provider.removeListener("accountsChanged", handleAccountChanged);
+      provider.removeListener("chainChanged", handleChainChanged);
+      provider.removeListener("connect", handleConnect);
 
       console.log("web3: unregistered listeners");
     },
@@ -65,13 +80,11 @@ export function useWeb3Provider() {
       provider.on("connect", handleConnect);
 
       // Subscribe to provider disconnection
-      provider.on("disconnect", (error: { code: number; message: string }) => {
-        console.log("disconnect", error);
-      });
+      provider.on("disconnect", handleDisconnect);
 
       console.log("web3: registered listeners");
     },
-    [handleAccountChanged, handleChainChanged, handleConnect]
+    [handleAccountChanged, handleChainChanged, handleConnect, handleDisconnect]
   );
 
   useEffect(() => {
@@ -141,85 +154,6 @@ export function useWeb3Provider() {
     isError,
     isLoading,
     tryConnect: handleTryConnect,
-  };
-}
-
-export function useWeb3Auth() {
-  const { state, actions } = useAuthStore();
-  const { provider, tryConnect } = useWeb3Provider();
-
-  const resumeSession = useCallback(async () => {
-    try {
-      if (!provider) {
-        console.log("no provider detected");
-
-        return false;
-      }
-
-      const signer = provider.getSigner();
-      const address = await signer.getAddress();
-
-      actions.setUser({
-        kind: "connected",
-        address,
-      });
-      return true;
-    } catch (error) {
-      return false;
-    }
-  }, [actions, provider]);
-
-  const signinMutation = useCallback(async () => {
-    const resumed = await resumeSession();
-
-    if (resumed) {
-      return;
-    }
-
-    try {
-      const $provider = provider || (await tryConnect());
-      if ($provider) {
-        await $provider.send("eth_requestAccounts", []);
-        const signer = $provider.getSigner();
-        const address = await signer.getAddress();
-        actions.setUser({
-          kind: "connected",
-          address,
-        });
-      }
-    } catch (error) {
-      console.log("failed to connect", error);
-    }
-  }, [actions, provider, resumeSession, tryConnect]);
-
-  const disconnectMutation = useCallback(async () => {
-    if (provider) {
-      actions.reset();
-    }
-  }, [actions, provider]);
-
-  const { mutateAsync: signin, isLoading: isSigningIn } =
-    useMutation(signinMutation);
-
-  const { mutateAsync: disconnect, isLoading: isDisconnecting } =
-    useMutation(disconnectMutation);
-
-  useEffect(() => {
-    resumeSession();
-  }, [provider, resumeSession]);
-
-  const isConnected = useMemo(
-    () => state.user.kind === "connected",
-    [state.user]
-  );
-
-  return {
-    signin,
-    disconnect,
-    isSigningIn,
-    isDisconnecting,
-    user: state.user,
-    isConnected,
   };
 }
 
