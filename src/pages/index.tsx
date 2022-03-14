@@ -22,8 +22,8 @@ function Hero() {
   const [introComplete, setIntroComplete] = useState(false);
 
   return (
-    <div className="grid place-content-center gap-4">
-      <h1 className="text-3xl uppercase font-mono font-bold text-white flex text-center whitespace-nowrap">
+    <div className="grid place-content-center gap-4 w-full flex-1 relative">
+      <h1 className="text-3xl uppercase font-mono font-bold text-white block text-center">
         {introComplete ? (
           HERO_STEPS[LAST_STEP_INDEX]
         ) : (
@@ -47,10 +47,9 @@ function Hero() {
           />
         )}
       </h1>
-
       <LogoSvg
         className={clsx("transition-opacity duration-1000", {
-          "opacity-0": !introComplete,
+          "opacity-0 hidden": !introComplete,
         })}
       />
     </div>
