@@ -5,6 +5,8 @@
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
+    "strictNullChecks": true,
+    "strictBindCallApply": true,
     "forceConsistentCasingInFileNames": true,
     "noEmit": true,
     "incremental": true,
