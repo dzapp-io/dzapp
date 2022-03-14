@@ -59,7 +59,7 @@ export const AnimatedCard: FC<Props> = ({ children, title, subTitle }) => (
     transition={{ type: "spring" }}
     className="md:relative w-full mx-auto max-w-3xl"
   >
-    <div className="p-12 my-8 w-full md:ring md:shadow-xl bg-gray-900 text-purple-200 ring-purple-700/80 rounded-2xl">
+    <div className="md:p-12 p-4 my-8 w-full md:ring md:shadow-xl bg-gray-900 text-purple-200 ring-purple-700/80 rounded-2xl">
       {(title || subTitle) && (
         <motion.div
           initial="hidden"
