@@ -6,7 +6,7 @@ module.exports = {
     "./src/pages/**/*.{js,ts,jsx,tsx,css}",
     "./src/(components|compounds|layouts)/**/*.{js,ts,jsx,tsx,css}",
   ],
-  darkMode: false, // or 'media' or 'class'
+  darkMode: "class",
   theme: {
     extend: {
       colors: {
