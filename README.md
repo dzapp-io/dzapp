@@ -16,3 +16,5 @@ run
 ```
 yarn start
 ```
+
+have fun!
