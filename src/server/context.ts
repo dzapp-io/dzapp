@@ -1,19 +1,15 @@
 import { inferAsyncReturnType } from "@trpc/server";
-
 import got from "got";
-import { NextApiRequest, NextApiResponse } from "next";
-import { Session } from "next-iron-session";
-
+import { IronSession } from "iron-session";
 import withSession from "lib/session";
+import { NextApiRequest, NextApiResponse } from "next";
 
-type NextRequestWithSession = NextApiRequest & { session: Session };
+type NextRequestWithSession = NextApiRequest & { session: IronSession };
 
-type ContextConfig = {
-  req: NextRequestWithSession;
-  res: NextApiResponse<any>;
-};
-
-const createContextInner = async ({ req, res }: ContextConfig) => {
+const createContextInner = async (
+  req: NextRequestWithSession,
+  res: NextApiResponse
+) => {
   return {
     req,
     res,

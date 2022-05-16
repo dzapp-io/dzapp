@@ -1,8 +1,7 @@
 import { FC, useState } from "react";
 import Head from "next/head";
 import { motion, Variants } from "framer-motion";
-
-import styled from "lib/styled";
+import tw from "tailwind-styled-components";
 
 import Logo from "components/Logo";
 import NavBar from "compounds/NavBar";
@@ -97,7 +96,7 @@ export const Header: FC = ({ children }) => {
   );
 };
 
-export const Clamp = styled.div.tw`w-full max-w-3xl m-auto`;
+export const Clamp = tw.div`w-full max-w-3xl m-auto`;
 
 export const Footer = () => (
   <footer className="flex items-center w-full h-24 bg-bluegray text-purple-200">

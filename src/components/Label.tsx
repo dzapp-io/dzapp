@@ -1,6 +1,5 @@
-import styled from "lib/styled";
+import tw from "tailwind-styled-components";
 
-const Label = styled.label
-  .tw`block text-sm font-medium text-gray-300 text-left`;
+const Label = tw.label`block text-sm font-medium text-gray-300 text-left`;
 
 export default Label;

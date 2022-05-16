@@ -1,7 +1,8 @@
-import { withIronSession, Handler } from "next-iron-session";
+import { withIronSessionApiRoute } from "iron-session/next";
+import { NextApiHandler } from "next";
 
-export default function withSession<TReq, TRes>(handler: Handler<TReq, TRes>) {
-  return withIronSession(handler, {
+export default function withSession<TRes>(handler: NextApiHandler<TRes>) {
+  return withIronSessionApiRoute(handler, {
     password: process.env.SECRET_COOKIE_PASSWORD ?? "",
     cookieName: "lb-merchant",
     cookieOptions: {
