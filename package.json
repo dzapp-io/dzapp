@@ -11,7 +11,7 @@
     "db:push": "prisma db push --schema=./db/schema.prisma --skip-seed",
     "db:seed": "npx prisma db seed",
     "db:studio": "prisma studio --schema=./db/schema.prisma",
-    "next-build": "yarn db:generate && next build"
+    "next-build": "pnpm db:generate && next build"
   },
   "prisma": {
     "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} db/seed.ts"
